@@ -11,15 +11,19 @@
   <script src="config.js"></script>
   <style>
     :root {
-      --primary: #0a5f38;       /* Deep emerald green */
-      --secondary: #d4af37;     /* Metallic gold */
-      --accent: #8B4513;
+      /* --- LOGO MAIN COLORS --- */
+      --primary: #002D62;         /* Deep Blue/Navy */
+      --secondary: #FF9900;     /* Orange/Gold */
+      /* ------------------------ */
+      --accent: #8B4513; /* Kept for general brown if needed */
       --light: #fdfdfd;
       --dark: #1a1a1a;
-      --success: #28a745;
-      --whatsapp: #25D366;
-      --gradient-start: #0a5f38;
-      --gradient-end: #1a8c5f;
+      --success: #28a745; /* Kept standard green for 'success' icon/text */
+      --whatsapp: #25D366; /* Kept standard green for WhatsApp */
+      --gradient-start: var(--primary); 
+      --gradient-end: #004F98; /* Lighter shade of Navy Blue */
+      /* NEW CSS VARIABLE FOR HEADER HEIGHT */
+      --header-height: 86px; /* Approx height of your header + padding */
     }
 
     * {
@@ -34,6 +38,8 @@
       color: var(--dark);
       line-height: 1.7;
       overflow-x: hidden;
+      /* Add body padding to prevent content from hiding behind fixed header */
+      padding-top: var(--header-height); 
     }
 
     .container {
@@ -58,14 +64,15 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--secondary), #b8860b);
+      /* Primary button uses secondary color (Orange/Gold) */
+      background: linear-gradient(135deg, var(--secondary), #E08700);
       color: white;
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 6px 20px rgba(255, 153, 0, 0.4);
     }
 
     .btn-primary:hover {
       transform: translateY(-4px);
-      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.6);
+      box-shadow: 0 10px 25px rgba(255, 153, 0, 0.6);
     }
 
     .btn-whatsapp {
@@ -138,12 +145,15 @@
       left: 0;
       width: 100%;
       z-index: 1000;
-      box-shadow: 0 6px 20px rgba(10, 95, 56, 0.25);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 6px 20px rgba(0, 45, 98, 0.25); 
       transition: transform 0.4s ease;
     }
 
+    /* EXISTING CLASS FOR SCROLL-HIDE IS 'header-hidden' */
     .header-hidden {
-      transform: translateY(-100%);
+      /* Use the CSS variable for dynamic hiding */
+      transform: translateY(calc(-1 * var(--header-height))); 
     }
 
     .header-container {
@@ -156,6 +166,23 @@
       display: flex;
       align-items: center;
       gap: 18px;
+    }
+    
+    /* New style for the logo image */
+    .logo-img {
+      height: 50px; /* Logo image height */
+      width: auto;
+      margin-right: -10px; /* Optional: adjust spacing */
+      /* NEW: Add a drop shadow to make the logo pop on the dark header */
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
+      /* NEW: Pulsing animation */
+      animation: logo-pulse 2s infinite;
+    }
+
+    @keyframes logo-pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
 
     .logo i {
@@ -228,7 +255,7 @@
     }
 
     .cta-button {
-      background: linear-gradient(135deg, var(--secondary), #b8860b);
+      background: linear-gradient(135deg, var(--secondary), #E08700);
       color: white;
       border: none;
       padding: 14px 28px;
@@ -236,13 +263,13 @@
       font-weight: 700;
       cursor: pointer;
       transition: all 0.4s ease;
-      box-shadow: 0 5px 18px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 5px 18px rgba(255, 153, 0, 0.4); /* Shadow adjusted to Orange/Gold */
       font-size: 1.05rem;
     }
 
     .cta-button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 22px rgba(212, 175, 55, 0.6);
+      box-shadow: 0 8px 22px rgba(255, 153, 0, 0.6); /* Shadow adjusted to Orange/Gold */
     }
 
     .mobile-menu-toggle {
@@ -308,6 +335,25 @@
       cursor: pointer;
     }
 
+    /* NEW: Mobile nav logo with animation */
+    .mobile-nav-logo {
+      text-align: center;
+      margin-bottom: 30px;
+      animation: pulse 2s infinite;
+    }
+
+    .mobile-nav-logo img {
+      height: 80px;
+      width: auto;
+      filter: drop-shadow(0 0 10px rgba(255, 153, 0, 0.5));
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
     .overlay {
       display: none;
       position: fixed;
@@ -324,19 +370,38 @@
     }
 
     .hero {
-      background: linear-gradient(rgba(10, 95, 56, 0.85), rgba(10, 95, 56, 0.95)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-      background-size: cover;
-      background-position: center;
+      /* Remove background image and gradient */
+      background: none;
       color: white;
       padding: 180px 0 120px;
       text-align: center;
       position: relative;
+      background-color: var(--primary); /* Use primary color as fallback */
+    }
+    
+    /* Updated hero background with logo only */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      /* Use logo.png for the background */
+      background-image: url('logo.png'); 
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain; 
+      opacity: 0.8; /* Make it subtle */
+      z-index: 0; 
     }
 
     .hero-content {
       max-width: 850px;
       margin: 0 auto;
       animation: fadeInUp 1.2s ease;
+      position: relative; 
+      z-index: 1; 
     }
 
     @keyframes fadeInUp {
@@ -350,6 +415,7 @@
       text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.4);
       font-weight: 800;
       line-height: 1.2;
+      color: white;
     }
 
     .hero p {
@@ -359,6 +425,7 @@
       margin-left: auto;
       margin-right: auto;
       font-weight: 400;
+      color: white;
     }
 
     .hero-buttons {
@@ -387,17 +454,41 @@
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       border: 1px solid #f0f0f0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('logo.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      opacity: 0.15; /* Medium opacity */
+      z-index: 0;
+    }
+
+    .feature-card > * {
+      position: relative;
+      z-index: 1;
     }
 
     .feature-card:hover {
       transform: translateY(-12px);
-      box-shadow: 0 18px 40px rgba(10, 95, 56, 0.12);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 18px 40px rgba(0, 45, 98, 0.12); 
     }
 
     .feature-icon {
       width: 90px;
       height: 90px;
-      background: linear-gradient(135deg, rgba(10, 95, 56, 0.1), rgba(212, 175, 55, 0.15));
+      /* Background adjusted from green/gold to primary/secondary colors */
+      background: linear-gradient(135deg, rgba(0, 45, 98, 0.1), rgba(255, 153, 0, 0.15));
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -405,7 +496,8 @@
       margin: 0 auto 25px;
       color: var(--primary);
       font-size: 2.2rem;
-      box-shadow: 0 4px 12px rgba(10, 95, 56, 0.08);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 4px 12px rgba(0, 45, 98, 0.08); 
     }
 
     .feature-card h3 {
@@ -417,7 +509,8 @@
 
     .packages {
       padding: 100px 0;
-      background: linear-gradient(to bottom, #fbfbfb, #f0f5f0);
+      /* Background adjusted from green to primary color */
+      background: linear-gradient(to bottom, #fbfbfb, #f0f3f5); 
     }
 
     .packages-grid {
@@ -437,7 +530,8 @@
 
     .package-card:hover {
       transform: translateY(-12px);
-      box-shadow: 0 20px 50px rgba(10, 95, 56, 0.18);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 20px 50px rgba(0, 45, 98, 0.18); 
     }
 
     .package-header {
@@ -489,11 +583,12 @@
     .package-card.featured {
       transform: scale(1.06);
       border: 3px solid var(--secondary);
-      box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+      /* Shadow adjusted from gold to secondary color */
+      box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.15); 
     }
 
     .package-card.featured .package-header {
-      background: linear-gradient(135deg, var(--secondary), #b8860b);
+      background: linear-gradient(135deg, var(--secondary), #E08700);
     }
 
     .badge {
@@ -544,7 +639,8 @@
       margin: 0 auto 25px;
       position: relative;
       z-index: 2;
-      box-shadow: 0 6px 15px rgba(10, 95, 56, 0.3);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 6px 15px rgba(0, 45, 98, 0.3); 
     }
 
     .step:not(:last-child):after {
@@ -567,7 +663,8 @@
 
     .testimonials {
       padding: 100px 0;
-      background: linear-gradient(to bottom, #f0f5f0, #fbfbfb);
+      /* Background adjusted from green to primary color */
+      background: linear-gradient(to bottom, #f0f3f5, #fbfbfb); 
     }
 
     .testimonials-grid {
@@ -588,7 +685,8 @@
     .testimonial-card:before {
       content: '"';
       font-size: 5.5rem;
-      color: rgba(212, 175, 55, 0.1);
+      /* Color adjusted to secondary color */
+      color: rgba(255, 153, 0, 0.1); 
       position: absolute;
       top: 15px;
       right: 30px;
@@ -663,7 +761,8 @@
     .gallery-tab.active {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
-      box-shadow: 0 5px 15px rgba(10, 95, 56, 0.2);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 5px 15px rgba(0, 45, 98, 0.2); 
     }
 
     .gallery-tab:hover:not(.active) {
@@ -687,7 +786,8 @@
 
     .gallery-item:hover {
       transform: translateY(-8px);
-      box-shadow: 0 15px 30px rgba(10, 95, 56, 0.2);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 15px 30px rgba(0, 45, 98, 0.2); 
     }
 
     .gallery-item img, .gallery-item video {
@@ -706,7 +806,8 @@
       bottom: 0;
       right: 0;
       left: 0;
-      background: linear-gradient(to top, rgba(10, 95, 56, 0.85), transparent);
+      /* Background adjusted from green to primary color */
+      background: linear-gradient(to top, rgba(0, 45, 98, 0.85), transparent); 
       color: white;
       padding: 25px;
       transform: translateY(100%);
@@ -762,7 +863,8 @@
 
     .faq-section {
       padding: 100px 0;
-      background: #f9fbf9;
+      /* Background adjusted from green to primary color */
+      background: #f9fbf9; 
     }
 
     .faq-item {
@@ -786,7 +888,8 @@
     }
 
     .faq-question:hover {
-      background: #f0f8f0;
+      /* Background adjusted from green to primary color */
+      background: #f0f4f8; 
     }
 
     .faq-answer {
@@ -822,7 +925,8 @@
 
     .map-placeholder {
       height: 100%;
-      background: #f5f9f5;
+      /* Background adjusted from green to primary color */
+      background: #f5f7f9; 
       display: flex;
       align-items: center;
       justify-content: center;
@@ -858,7 +962,8 @@
     .contact-icon {
       width: 60px;
       height: 60px;
-      background: linear-gradient(135deg, rgba(10, 95, 56, 0.12), rgba(212, 175, 55, 0.08));
+      /* Background adjusted from green/gold to primary/secondary colors */
+      background: linear-gradient(135deg, rgba(0, 45, 98, 0.12), rgba(255, 153, 0, 0.08)); 
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -866,7 +971,8 @@
       color: var(--primary);
       font-size: 1.4rem;
       flex-shrink: 0;
-      box-shadow: 0 4px 10px rgba(10, 95, 56, 0.08);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 4px 10px rgba(0, 45, 98, 0.08); 
     }
 
     .contact-details h4 {
@@ -876,10 +982,11 @@
     }
 
     .contact-form {
-      background: #f9fbf9;
+      /* Background and border adjusted from green to primary color */
+      background: #f9fbf9; 
       padding: 35px;
       border-radius: 16px;
-      border: 1px solid #eef5ee;
+      border: 1px solid #eef0f5; 
     }
 
     .form-group {
@@ -897,7 +1004,8 @@
     .form-control {
       width: 100%;
       padding: 14px 18px;
-      border: 1px solid #d5e5d5;
+      /* Border adjusted from green to primary color */
+      border: 1px solid #d5dce5; 
       border-radius: 10px;
       font-size: 1.05rem;
       transition: all 0.3s ease;
@@ -906,7 +1014,8 @@
 
     .form-control:focus {
       border-color: var(--secondary);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+      /* Shadow adjusted to secondary color */
+      box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2); 
       outline: none;
     }
 
@@ -916,11 +1025,20 @@
       padding: 70px 0 30px;
     }
 
-    .footer-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 45px;
-      margin-bottom: 45px;
+    /* New style for footer logo */
+    .footer-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .footer-logo-container img {
+      height: 60px; /* Adjust size as needed */
+      width: auto;
+      /* Required: The footer logo must use logo.jpg */
+      /* Optional: Adjust for visibility on dark background */
+      filter: drop-shadow(0 0 8px rgba(255, 153, 0, 0.5)); 
     }
 
     .footer-col h3 {
@@ -951,7 +1069,8 @@
     }
 
     .footer-col a {
-      color: #e0f0e0;
+      /* Color adjusted from green to blue */
+      color: #e0e5f0; 
       text-decoration: none;
       transition: all 0.3s ease;
       font-weight: 500;
@@ -1041,7 +1160,8 @@
       z-index: 99;
       opacity: 0;
       transition: all 0.4s ease;
-      box-shadow: 0 5px 15px rgba(10, 95, 56, 0.3);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 5px 15px rgba(0, 45, 98, 0.3); 
     }
 
     .scroll-top.visible {
@@ -1060,9 +1180,7 @@
     }
 
     .chatbot-button {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, var(--primary), #1a8c5f);
+      background: linear-gradient(135deg, var(--primary), var(--gradient-end));
       color: white;
       border-radius: 50%;
       display: flex;
@@ -1070,7 +1188,8 @@
       justify-content: center;
       font-size: 26px;
       cursor: pointer;
-      box-shadow: 0 6px 25px rgba(10, 95, 56, 0.4);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 6px 25px rgba(0, 45, 98, 0.4); 
       transition: all 0.4s ease;
       animation: bounce 2s infinite;
     }
@@ -1093,7 +1212,8 @@
       height: 520px;
       background: white;
       border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(10, 95, 56, 0.25);
+      /* Shadow adjusted from green to primary color */
+      box-shadow: 0 10px 40px rgba(0, 45, 98, 0.25); 
       display: none;
       flex-direction: column;
       overflow: hidden;
@@ -1144,7 +1264,8 @@
     }
 
     .bot-message {
-      background: #f0f8f0;
+      /* Background adjusted from green to primary color */
+      background: #f0f4f8; 
       color: #222;
       align-self: flex-start;
       border-bottom-right-radius: 6px;
@@ -1165,7 +1286,8 @@
     }
 
     .quick-question {
-      background: #e8f4e8;
+      /* Background adjusted from green to primary color */
+      background: #e8f0f8; 
       border: none;
       border-radius: 22px;
       padding: 10px 18px;
@@ -1177,7 +1299,8 @@
     }
 
     .quick-question:hover {
-      background: #d4edda;
+      /* Background adjusted from green to primary color */
+      background: #d4e0ed; 
       transform: translateY(-2px);
     }
 
@@ -1222,6 +1345,10 @@
     }
 
     @media (max-width: 768px) {
+      /* Update the body padding-top for mobile fixed header */
+      body {
+        padding-top: var(--header-height);
+      }
       .desktop-nav { display: none; }
       .mobile-menu-toggle { display: block; }
       .header-contact { display: none; }
@@ -1248,7 +1375,7 @@
   <header id="mainHeader">
     <div class="container header-container">
       <div class="logo">
-        <i class="fas fa-kaaba" aria-hidden="true" id="logo-icon"></i>
+        <img src="logo.png" alt="Logo Icon" class="logo-img" id="logo-icon-img">
         <div>
           <h1 id="agency-name">Loading...</h1>
           <span id="agency-tagline">Loading...</span>
@@ -1281,6 +1408,10 @@
     <button class="mobile-nav-close" id="mobileNavClose" aria-label="إغلاق القائمة">
       <i class="fas fa-times" aria-hidden="true"></i>
     </button>
+    <!-- NEW: Add animated logo to mobile nav -->
+    <div class="mobile-nav-logo">
+      <img src="logo.png" alt="Logo" class="mobile-logo-img">
+    </div>
     <ul>
       <li><a href="#الرئيسية">الرئيسية</a></li>
       <li><a href="#من-نحن">من نحن</a></li>
@@ -1297,7 +1428,7 @@
   </nav>
   <section class="hero" id="الرئيسية">
     <div class="container hero-content">
-      <h2 id="hero-title">رحلتك الروحية... تبدأ من هنا</h2>
+      <h2 id="hero-title">معتمرونا... أمانة بين أيدينا</h2>
       <p id="hero-subtitle">نحوّل حلمك بأداء العمرة إلى واقع ميسر مع خدمات شاملة تغطي كل تفاصيل رحلتك من لحظة التفكير حتى العودة</p>
       <div class="hero-buttons">
         <a href="#باقاتنا" class="btn btn-primary">اكتشف باقاتنا</a>
@@ -1355,8 +1486,7 @@
         <p>اختر الباقة المناسبة لاحتياجاتك واستمتع برحلة عمرة لا تُنسى</p>
       </div>
       <div class="packages-grid" id="packages-container">
-        <!-- Packages injected by JS -->
-      </div>
+        </div>
     </div>
   </section>
   <section class="steps" id="خدماتنا">
@@ -1464,8 +1594,7 @@
       </div>
       <div class="contact-container">
         <div class="contact-info" id="contact-info-list">
-          <!-- Injected by JS -->
-        </div>
+          </div>
         <div class="contact-form">
           <h3 style="margin-bottom:22px;color:var(--primary);">أرسل لنا رسالة</h3>
           <form>
@@ -1484,11 +1613,13 @@
     <div class="container">
       <div class="footer-container">
         <div class="footer-col">
-          <h3 id="footer-agency-name">Loading...</h3>
+          <div class="footer-logo-container">
+             <img src="logo.jpg" alt="Logo Image" class="footer-logo">
+             <h3 id="footer-agency-name" style="margin:0;padding:0;border:none;">Loading...</h3>
+          </div>
           <p>نحوّل حلمك بأداء العمرة إلى واقع ميسر مع خدمات شاملة تغطي كل تفاصيل رحلتك من لحظة التفكير حتى العودة.</p>
           <div class="social-links" id="social-links-footer">
-            <!-- Injected by JS -->
-          </div>
+            </div>
         </div>
         <div class="footer-col">
           <h3>روابط سريعة</h3>
@@ -1515,8 +1646,7 @@
         <div class="footer-col">
           <h3>اتصل بنا</h3>
           <ul id="footer-contact-list">
-            <!-- Injected by JS -->
-          </ul>
+            </ul>
         </div>
       </div>
       <div class="copyright">
@@ -1541,8 +1671,7 @@
       </div>
       <div class="chatbot-messages" id="chatbotMessages">
         <div class="message bot-message" id="initial-bot-message">
-          <!-- Filled by JS -->
-        </div>
+          </div>
       </div>
       <div class="chatbot-input">
         <input type="text" id="chatbotInput" placeholder="اكتب رسالتك هنا...">
@@ -1563,7 +1692,13 @@
 
       document.getElementById('agency-name').textContent = cfg.agency.name;
       document.getElementById('agency-tagline').textContent = cfg.agency.tagline;
-      document.getElementById('logo-icon').className = cfg.agency.logoIcon + ' fas';
+      // Removed the i tag logo icon: document.getElementById('logo-icon').className = cfg.agency.logoIcon + ' fas';
+      
+      // Update header logo text style to accommodate image logo
+      const logoText = document.querySelector('.logo > div');
+      if (logoText) {
+          logoText.style.marginRight = '10px';
+      }
 
       const waUrl = `https://wa.me/${cfg.contact.whatsapp}`;
       document.getElementById('whatsapp-header-link').href = waUrl;
@@ -1623,10 +1758,11 @@
       document.getElementById('footer-agency-name').textContent = cfg.agency.name;
       document.getElementById('copyright-text').innerHTML = `جميع الحقوق محفوظة &copy; ${cfg.agency.copyrightYear} ${cfg.agency.name}`;
 
+      // SOCIAL MEDIA UPDATE (Twitter -> TikTok)
       const socialLinks = document.getElementById('social-links-footer');
       socialLinks.innerHTML = `
         <a href="${cfg.social.facebook}" aria-label="فيسبوك"><i class="fab fa-facebook-f"></i></a>
-        <a href="${cfg.social.twitter}" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+        <a href="${cfg.social.tiktok}" aria-label="تيك توك"><i class="fab fa-tiktok"></i></a>
         <a href="${cfg.social.instagram}" aria-label="إنستغرام"><i class="fab fa-instagram"></i></a>
         <a href="${cfg.social.whatsapp}" target="_blank" aria-label="واتساب"><i class="fab fa-whatsapp"></i></a>
       `;
@@ -1649,6 +1785,42 @@
     });
   </script>
   <script>
+    // Enhanced Header Auto Hide/Show with better logic
+    let lastScroll = 0;
+    const header = document.getElementById('mainHeader');
+    const scrollThreshold = 10; // Minimum scroll distance to trigger
+    let ticking = false;
+
+    function updateHeaderVisibility() {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll <= 0) {
+        header.classList.remove('header-hidden');
+        return;
+      }
+      
+      // Show header when scrolling up, hide when scrolling down
+      if (currentScroll < lastScroll - scrollThreshold) {
+        // Scrolling up
+        header.classList.remove('header-hidden');
+      } else if (currentScroll > lastScroll + scrollThreshold) {
+        // Scrolling down
+        header.classList.add('header-hidden');
+      }
+      
+      lastScroll = currentScroll;
+      ticking = false;
+    }
+
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(updateHeaderVisibility);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', requestTick, { passive: true });
+
     // Mobile Menu Toggle
     const mobileToggle = document.getElementById('mobileMenuToggle');
     const mobileNav = document.getElementById('mobileNav');
@@ -1659,6 +1831,8 @@
       mobileNav.classList.add('active');
       overlay.classList.add('active');
       document.body.style.overflow = 'hidden';
+      // Scroll to top when mobile menu opens
+      mobileNav.scrollTop = 0;
     });
 
     [mobileClose, overlay].forEach(el => {
@@ -1680,27 +1854,10 @@
     // Scroll Top Button
     const scrollTopBtn = document.getElementById('scrollTop');
     window.addEventListener('scroll', () => {
-      scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+      scrollTopBtn.classList.toggle('visible', window.pageYOffset > 400);
     });
     scrollTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Header scroll hide
-    let lastScroll = 0;
-    const header = document.getElementById('mainHeader');
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.pageYOffset;
-      if (currentScroll <= 0) {
-        header.classList.remove('header-hidden');
-        return;
-      }
-      if (currentScroll > lastScroll && !header.classList.contains('header-hidden')) {
-        header.classList.add('header-hidden');
-      } else if (currentScroll < lastScroll && header.classList.contains('header-hidden')) {
-        header.classList.remove('header-hidden');
-      }
-      lastScroll = currentScroll;
     });
 
     // Chatbot Toggle
@@ -1724,6 +1881,142 @@
         // In real app, filter gallery items here
       });
     });
+
+    // Enhanced Chatbot with Site Knowledge Base
+    const chatbotMessages = document.getElementById('chatbotMessages');
+    const chatbotInput = document.getElementById('chatbotInput');
+    const chatbotSend = document.getElementById('chatbotSend');
+
+    // Site Knowledge Base (using config.js data and site content)
+    const knowledgeBase = {
+      'الباقات المتاحة': () => {
+        const cfg = window.SHARQIA_CONFIG;
+        return `نقدم ثلاث باقات رئيسية للعمرة:
+        
+• ${cfg.packages[0].name} - ${cfg.packages[0].price}
+• ${cfg.packages[1].name} - ${cfg.packages[1].price}
+• ${cfg.packages[2].name} - ${cfg.packages[2].price}
+
+الباقة المميزة هي الأكثر شيوعاً بين عملائنا.`;
+      },
+      
+      'الأسعار': () => {
+        const cfg = window.SHARQIA_CONFIG;
+        return `أسعار باقاتنا تبدأ من:
+        
+• الباقة الأساسية: ${cfg.packages[0].price}
+• الباقة المميزة: ${cfg.packages[1].price} 
+• الباقة الفاخرة: ${cfg.packages[2].price}
+
+للحصول على عرض دقيق يرجى التواصل معنا.`;
+      },
+      
+      'الوثائق المطلوبة': () => `الوثائق المطلوبة للحصول على تأشيرة العمرة:
+• جواز سفر ساري المفعول لمدة 6 أشهر على الأقل
+• صورتان شخصيتان حديثتان بخلفية بيضاء
+• استمارة طلب تأشيرة العمرة
+• شهادة التطعيم حسب متطلبات الصحة`,
+      
+      'معلومات الاتصال': () => {
+        const cfg = window.SHARQIA_CONFIG;
+        return `يمكنك التواصل معنا عبر:
+📞 الهاتف: ${cfg.contact.phone}
+📱 واتساب: ${cfg.contact.whatsapp}
+✉️ الإيميل: ${cfg.contact.email}
+📍 العنوان: ${cfg.contact.address}
+
+${cfg.contact.workingHours}`;
+      },
+      
+      'الخدمات': () => `نقدم خدمات متكاملة تشمل:
+• استخراج تأشيرة العمرة
+• تذاكر الطيران ذهاب وعودة
+• الإقامة في فنادق متنوعة المستويات
+• النقل الداخلي بين المشاعر
+• مرشدين دينيين متخصصين
+• وجبات الطعام (في الباقات المميزة والفاخرة)
+• تأمين صحي شامل
+• دعم ومساندة طوال الرحلة`,
+      
+      'خطوات الحجز': () => `خطوات سهلة لتأمين عمرتك:
+1. الاتصال بنا أو تعبئة نموذج الحجز
+2. اختيار الباقة المناسبة
+3. تسليم المستندات المطلوبة
+4. استلام التأشيرة خلال 24-48 ساعة
+5. بدء رحلتك الروحية`,
+      
+      'default': () => {
+        const cfg = window.SHARQIA_CONFIG;
+        return `${cfg.chatbot.fallback}
+
+يمكنني مساعدتك في معلومات عن:
+• الباقات والأسعار
+• الوثائق المطلوبة  
+• خطوات الحجز
+• معلومات الاتصال
+• خدماتنا المتكاملة`;
+      }
+    };
+
+    // Chatbot response function
+    function getBotResponse(message) {
+      message = message.toLowerCase();
+      
+      if (message.includes('باقات') || message.includes('أسعار') || message.includes('سعر')) {
+        return knowledgeBase['الأسعار']();
+      } else if (message.includes('وثائق') || message.includes('مستندات') || message.includes('أوراق')) {
+        return knowledgeBase['الوثائق المطلوبة']();
+      } else if (message.includes('اتصال') || message.includes('رقم') || message.includes('هاتف') || message.includes('عنوان')) {
+        return knowledgeBase['معلومات الاتصال']();
+      } else if (message.includes('خدمات') || message.includes('ماذا تقدم')) {
+        return knowledgeBase['الخدمات']();
+      } else if (message.includes('خطوات') || message.includes('حجز') || message.includes('كيف أحجز')) {
+        return knowledgeBase['خطوات الحجز']();
+      } else {
+        return knowledgeBase['default']();
+      }
+    }
+
+    // Add message to chat
+    function addMessage(text, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+      messageDiv.textContent = text;
+      chatbotMessages.appendChild(messageDiv);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    // Handle quick questions
+    document.querySelectorAll('.quick-question').forEach(button => {
+      button.addEventListener('click', () => {
+        const question = button.getAttribute('data-question');
+        addMessage(question, true);
+        
+        setTimeout(() => {
+          const response = getBotResponse(question);
+          addMessage(response);
+        }, 1000);
+      });
+    });
+
+    // Handle user input
+    chatbotSend.addEventListener('click', sendMessage);
+    chatbotInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    function sendMessage() {
+      const message = chatbotInput.value.trim();
+      if (!message) return;
+      
+      addMessage(message, true);
+      chatbotInput.value = '';
+      
+      setTimeout(() => {
+        const response = getBotResponse(message);
+        addMessage(response);
+      }, 1000);
+    }
   </script>
 </body>
 </html>
