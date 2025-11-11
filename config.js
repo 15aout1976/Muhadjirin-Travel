@@ -5,16 +5,16 @@ window.SHARQIA_CONFIG = {
   // ── Agency Identity ───────────────────────────────────────
   agency: {
     name: "وكالة المهاجرين ترافل للعمرة والأسفار",
-    tagline: "رحلتك الروحية تبدأ من هنا",
-    logoIcon: "fas fa-kaaba", // Font Awesome class (e.g., "fas fa-mosque")
+    tagline: "معتمرونا... أمانة بين أيدينا",
+    logoIcon: "logo.png", // Font Awesome class (e.g., "fas fa-mosque")
     copyrightYear: "2025"
   },
 
   // ── Contact Info ──────────────────────────────────────────
   contact: {
-    phone: "+213661671460",           // For call links
-    whatsapp: "213661671460",         // Without "+" (for wa.me)
-    email: "muhadjirine-travel@gmail.com",
+    phone: "213560460296+",           // For call links
+    whatsapp: "213560460296",         // Without "+" (for wa.me)
+    email: "almohajirintravel05@gmail.com",
     address: "أمام بلدية باتنة،الزمالة،باتنة،الجزائر",
     workingHours: "السبت - الخميس: 8 صباحاً - 8 مساءً<br>الجمعة: 10 صباحاً - 4 عصراً"
   },
@@ -69,15 +69,15 @@ window.SHARQIA_CONFIG = {
 
   // ── Social Links ──────────────────────────────────────────
   social: {
-    facebook: "#",
-    twitter: "#",
-    instagram: "#",
-    whatsapp: "https://wa.me/213661671460"
+    facebook: "https://www.facebook.com/share/1Adfyp9AMr/",
+    tiktok: "https://www.tiktok.com/@el_mohajrine.travel?_r=1&_t=ZS-91HylxsPzbp",
+    instagram: "https://www.instagram.com/el_mohajrine.travel05?igsh=MWU0Z3Yzbmpma3ZlOA==",
+    whatsapp: "https://wa.me/213560460296"
   },
 
   // ── SEO Metadata ──────────────────────────────────────────
   seo: {
-    title: "وكالة المهاجرين للعمرة والأسفار - رحلتك الروحية تبدأ من هنا",
+    title: "وكالة المهاجرين للعمرة والأسفار - معتمرونا... أمانة بين أيدينا",
     description: "نقدم باقات متكاملة للعمرة بأسعار مناسبة وخدمة مميزة. احجز رحلتك الروحية الآن.",
     keywords: "العمرة, وكالة عمرة, رحلات عمرة, تأشيرة عمرة, العمرة من الجزائر"
   },
