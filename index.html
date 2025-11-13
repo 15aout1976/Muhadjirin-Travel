@@ -2029,6 +2029,72 @@ ${cfg.contact.workingHours}`;
         addMessage(response);
       }, 1000);
     }
-  </script>
+
+// Add this to your JavaScript section
+
+// Contact Form Handler
+document.addEventListener('DOMContentLoaded', function() {
+  const contactForm = document.querySelector('.contact-form form');
+  
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const cfg = window.SHARQIA_CONFIG;
+      
+      // Get form data
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const email = document.getElementById('email').value;
+      const package = document.getElementById('package').value;
+      const message = document.getElementById('message').value;
+      
+      // Validate
+      if (!name || !phone || !message) {
+        alert('الرجاء ملء جميع الحقول المطلوبة');
+        return;
+      }
+      
+      // Create WhatsApp message
+      const whatsappMessage = `
+🕌 *استفسار جديد من الموقع*
+
+👤 *الاسم:* ${name}
+📱 *الهاتف:* ${phone}
+📧 *البريد:* ${email}
+📦 *الباقة:* ${package}
+
+💬 *الرسالة:*
+${message}
+      `.trim();
+      
+      // Open WhatsApp
+      const whatsappUrl = `https://wa.me/${cfg.contact.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+      window.open(whatsappUrl, '_blank');
+      
+      // Show success message
+      alert('شكراً لتواصلك! سيتم توجيهك إلى واتساب لإتمام الاستفسار');
+      
+      // Reset form
+      contactForm.reset();
+    });
+  }
+  
+  // Handle CTA buttons throughout the site
+  document.querySelectorAll('.cta-button').forEach(btn => {
+    if (!btn.closest('form')) { // Skip form submit buttons
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const cfg = window.SHARQIA_CONFIG;
+        const message = 'مرحباً! أرغب في الاستفسار عن باقات العمرة';
+        const whatsappUrl = `https://wa.me/${cfg.contact.whatsapp}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+      });
+    }
+  });
+});
+
+
+</script>
 </body>
 </html>
