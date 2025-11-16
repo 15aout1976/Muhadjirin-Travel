@@ -1726,7 +1726,8 @@
         <button id="chatbotSend" aria-label="إرسال"><i class="fas fa-paper-plane"></i></button>
       </div>
     </div>
-  </div>
+  </div>  
+   
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const cfg = window.SHARQIA_CONFIG;
@@ -1734,15 +1735,15 @@
         console.error("❌ SHARQIA_CONFIG not loaded!");
         return;
       }
+      
+      // --- تهيئة إعدادات الموقع العامة (Configuration Initialization) ---
       document.title = cfg.seo.title;
       document.getElementById('meta-description').content = cfg.seo.description;
       document.getElementById('meta-keywords').content = cfg.seo.keywords;
 
       document.getElementById('agency-name').textContent = cfg.agency.name;
       document.getElementById('agency-tagline').textContent = cfg.agency.tagline;
-      // Removed the i tag logo icon: document.getElementById('logo-icon').className = cfg.agency.logoIcon + ' fas';
       
-      // Update header logo text style to accommodate image logo
       const logoText = document.querySelector('.logo > div');
       if (logoText) {
           logoText.style.marginRight = '10px';
@@ -1801,13 +1802,9 @@
         `;
       }
 
-      // NOTE: map-address element was not present in the HTML structure, this line would throw an error if uncommented
-      // document.getElementById('map-address').querySelector('p').textContent = cfg.contact.address;
-
       document.getElementById('footer-agency-name').textContent = cfg.agency.name;
       document.getElementById('copyright-text').innerHTML = `جميع الحقوق محفوظة © ${cfg.agency.copyrightYear} ${cfg.agency.name}`;
 
-      // SOCIAL MEDIA UPDATE (Twitter -> TikTok)
       const socialLinks = document.getElementById('social-links-footer');
       socialLinks.innerHTML = `
         <a href="${cfg.social.facebook}" aria-label="فيسبوك"><i class="fab fa-facebook-f"></i></a>
@@ -1823,275 +1820,355 @@
         <li><i class="fas fa-envelope"></i> ${cfg.contact.email}</li>
       `;
 
-      document.getElementById('initial-bot-message').innerHTML = `
-        ${cfg.chatbot.welcome}
-        <div class="quick-questions">
-          <button class="quick-question" data-question="الباقات المتاحة">الباقات المتاحة</button>
-          <button class="quick-question" data-question="الأسعار">الأسعار</button>
-          <button class="quick-question" data-question="الوثائق المطلوبة">الوثائق المطلوبة</button>
-        </div>
-      `;
-    });
-  </script>
-  <script>
-    // Enhanced Header Auto Hide/Show with better logic
-    let lastScroll = 0;
-    const header = document.getElementById('mainHeader');
-    const scrollThreshold = 10; // Minimum scroll distance to trigger
-    let ticking = false;
+      // --- CHATBOT LOGIC START ---
+      const chatbotMessages = document.getElementById('chatbotMessages');
+      const chatbotInput = document.getElementById('chatbotInput');
+      const chatbotSend = document.getElementById('chatbotSend');
+      const chatbotBtn = document.getElementById('chatbotButton');
+      const chatbotWin = document.getElementById('chatbotWindow');
+      const chatbotClose = document.getElementById('chatbotClose');
 
-    function updateHeaderVisibility() {
-      const currentScroll = window.pageYOffset;
-      
-      if (currentScroll <= 0) {
-        header.classList.remove('header-hidden');
-        return;
-      }
-      
-      // Show header when scrolling up, hide when scrolling down
-      if (currentScroll < lastScroll - scrollThreshold) {
-        // Scrolling up
-        header.classList.remove('header-hidden');
-      } else if (currentScroll > lastScroll + scrollThreshold) {
-        // Scrolling down
-        header.classList.add('header-hidden');
-      }
-      
-      lastScroll = currentScroll;
-      ticking = false;
-    }
-
-    function requestTick() {
-      if (!ticking) {
-        requestAnimationFrame(updateHeaderVisibility);
-        ticking = true;
-      }
-    }
-
-    window.addEventListener('scroll', requestTick, { passive: true });
-
-    // Mobile Menu Toggle
-    const mobileToggle = document.getElementById('mobileMenuToggle');
-    const mobileNav = document.getElementById('mobileNav');
-    const overlay = document.getElementById('overlay');
-    const mobileClose = document.getElementById('mobileNavClose');
-
-    mobileToggle.addEventListener('click', () => {
-      mobileNav.classList.add('active');
-      overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      // Scroll to top when mobile menu opens
-      mobileNav.scrollTop = 0;
-    });
-
-    [mobileClose, overlay].forEach(el => {
-      el.addEventListener('click', () => {
-        mobileNav.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-      });
-    });
-
-    // FAQ Toggle
-    document.querySelectorAll('.faq-question').forEach(question => {
-      question.addEventListener('click', () => {
-        const faqItem = question.parentElement;
-        faqItem.classList.toggle('active');
-      });
-    });
-
-    // Scroll Top Button
-    const scrollTopBtn = document.getElementById('scrollTop');
-    window.addEventListener('scroll', () => {
-      scrollTopBtn.classList.toggle('visible', window.pageYOffset > 400);
-    });
-    scrollTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Chatbot Toggle
-    const chatbotBtn = document.getElementById('chatbotButton');
-    const chatbotWin = document.getElementById('chatbotWindow');
-    const chatbotClose = document.getElementById('chatbotClose');
-
-    chatbotBtn.addEventListener('click', () => {
-      chatbotWin.style.display = chatbotWin.style.display === 'flex' ? 'none' : 'flex';
-    });
-
-    chatbotClose.addEventListener('click', () => {
-      chatbotWin.style.display = 'none';
-    });
-
-    // Gallery Tabs
-    document.querySelectorAll('.gallery-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        // In real app, filter gallery items here
-      });
-    });
-
-    // Enhanced Chatbot with Site Knowledge Base
-    const chatbotMessages = document.getElementById('chatbotMessages');
-    const chatbotInput = document.getElementById('chatbotInput');
-    const chatbotSend = document.getElementById('chatbotSend');
-
-    // Site Knowledge Base (using config.js data and site content)
-    const knowledgeBase = {
-      'الباقات المتاحة': () => {
-        const cfg = window.SHARQIA_CONFIG;
-        return `نقدم ثلاث باقات رئيسية للعمرة:
+      // Enhanced function to add message to chat window
+      function addMessage(text, isUser = false, quickReplies = []) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
         
+        const textParagraph = document.createElement('p');
+        textParagraph.innerHTML = text.replace(/\n/g, '<br>'); 
+        messageDiv.appendChild(textParagraph);
+
+        if (!isUser && quickReplies.length > 0) {
+          const qrDiv = document.createElement('div');
+          qrDiv.className = 'quick-questions';
+          quickReplies.forEach(reply => {
+            const qrBtn = document.createElement('button');
+            qrBtn.className = 'quick-question';
+            qrBtn.setAttribute('data-question', reply);
+            qrBtn.textContent = reply;
+            qrBtn.addEventListener('click', (e) => {
+              const question = e.target.getAttribute('data-question');
+              handleUserMessage(question);
+            });
+            qrDiv.appendChild(qrBtn);
+          });
+          messageDiv.appendChild(qrDiv);
+        }
+
+        chatbotMessages.appendChild(messageDiv);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+      }
+      
+      // Enhanced Site Knowledge Base with all custom responses
+      const knowledgeBase = {
+          'initial': {
+              // رسالة ترحيب Modular باستخدام اسم الوكالة
+              text: () => `السلام عليكم، أنا مساعدك الآلي من وكالة **${cfg.agency.name}**.
+              \n\n${cfg.chatbot.welcome}`,
+              replies: ['الباقات المتاحة', 'الأسعار', 'معلومات الاتصال']
+          },
+          // الرد الخاص على التحية
+          'السلام عليكم': {
+              text: () => `وعليكم السلام ورحمة الله وبركاته. كيف يمكنني مساعدتك اليوم في رحلتك الروحانية؟`,
+              replies: ['الباقات المتاحة', 'معلومات الاتصال', 'خطوات الحجز']
+          },
+          'الباقات المتاحة': {
+              text: () => {
+                  return `نقدم ثلاث باقات رئيسية للعمرة:
 • ${cfg.packages[0].name} - ${cfg.packages[0].price}
 • ${cfg.packages[1].name} - ${cfg.packages[1].price}
 • ${cfg.packages[2].name} - ${cfg.packages[2].price}
-
 الباقة المميزة هي الأكثر شيوعاً بين عملائنا.`;
-      },
-      
-      'الأسعار': () => {
-        const cfg = window.SHARQIA_CONFIG;
-        return `أسعار باقاتنا تبدأ من:
-        
+              },
+              replies: ['الأسعار', 'خطوات الحجز', 'الوثائق المطلوبة']
+          },
+          'الأسعار': {
+              text: () => {
+                  return `أسعار باقاتنا تبدأ من:
 • الباقة الأساسية: ${cfg.packages[0].price}
 • الباقة المميزة: ${cfg.packages[1].price} 
 • الباقة الفاخرة: ${cfg.packages[2].price}
-
-للحصول على عرض دقيق يرجى التواصل معنا.`;
-      },
-      
-      'الوثائق المطلوبة': () => `الوثائق المطلوبة للحصول على تأشيرة العمرة:
+للحصول على عرض دقيق يرجى التواصل معنا عبر واتساب.`;
+              },
+              replies: ['الباقات المتاحة', 'هل توفرون التقسيط؟', 'معلومات الاتصال']
+          },
+          'الوثائق المطلوبة': {
+              text: () => `الوثائق المطلوبة للحصول على تأشيرة العمرة:
 • جواز سفر ساري المفعول لمدة 6 أشهر على الأقل
 • صورتان شخصيتان حديثتان بخلفية بيضاء
 • استمارة طلب تأشيرة العمرة
 • شهادة التطعيم حسب متطلبات الصحة`,
-      
-      'معلومات الاتصال': () => {
-        const cfg = window.SHARQIA_CONFIG;
-        return `يمكنك التواصل معنا عبر:
+              replies: ['خطوات الحجز', 'معلومات الاتصال', 'هل يمكنني الإلغاء؟']
+          },
+          'معلومات الاتصال': {
+              text: () => {
+                  return `يمكنك التواصل معنا عبر:
 📞 الهاتف: ${cfg.contact.phone}
 📱 واتساب: ${cfg.contact.whatsapp}
 ✉️ الإيميل: ${cfg.contact.email}
 📍 العنوان: ${cfg.contact.address}
-
 ${cfg.contact.workingHours}`;
-      },
-      
-      'الخدمات': () => `نقدم خدمات متكاملة تشمل:
+              },
+              replies: ['الباقات المتاحة', 'خدماتنا', 'شكرا لك']
+          },
+          'خدماتنا': {
+              text: () => `نقدم خدمات متكاملة تشمل:
 • استخراج تأشيرة العمرة
 • تذاكر الطيران ذهاب وعودة
 • الإقامة في فنادق متنوعة المستويات
 • النقل الداخلي بين المشاعر
 • مرشدين دينيين متخصصين
-• وجبات الطعام (في الباقات المميزة والفاخرة)
-• تأمين صحي شامل
 • دعم ومساندة طوال الرحلة`,
-      
-      'خطوات الحجز': () => `خطوات سهلة لتأمين عمرتك:
+              replies: ['الباقات المتاحة', 'خطوات الحجز', 'هل يوجد مرشد ديني؟']
+          },
+          'خطوات الحجز': {
+              text: () => `خطوات سهلة لتأمين عمرتك:
 1. الاتصال بنا أو تعبئة نموذج الحجز
 2. اختيار الباقة المناسبة
 3. تسليم المستندات المطلوبة
 4. استلام التأشيرة خلال 24-48 ساعة
 5. بدء رحلتك الروحية`,
-      
-      'default': () => {
-        const cfg = window.SHARQIA_CONFIG;
-        return `${cfg.chatbot.fallback}
+              replies: ['الباقات المتاحة', 'الوثائق المطلوبة', 'معلومات الاتصال']
+          },
+          'هل يمكنني الإلغاء؟': {
+              text: () => `نعم، يمكن تعديل أو إلغاء الحجز حسب الشروط والأحكام الموضحة في عقد الحجز. يرجى التواصل مباشرة مع فريقنا لمزيد من التفاصيل.`,
+              replies: ['الأسعار', 'معلومات الاتصال']
+          },
+          'هل توفرون التقسيط؟': {
+              text: () => `نعم، نوفر خيارات دفع مرنة تشمل التقسيط الميسر. للحصول على شروط التقسيط، يرجى التواصل مباشرة معنا.`,
+              replies: ['الأسعار', 'معلومات الاتصال']
+          },
+          'هل يوجد مرشد ديني؟': {
+              text: () => `بالتأكيد، تشمل رحلاتنا مرشدين دينيين متخصصين ومرافقين للمجموعة لإرشادك خلال أداء جميع المناسك بشكل صحيح ومريح.`,
+              replies: ['خدماتنا', 'خطوات الحجز', 'شكرا لك']
+          },
+          'شكرا لك': {
+              text: () => `على الرحب والسعة! لا تتردد في طرح المزيد من الأسئلة أو التواصل معنا عبر الهاتف أو واتساب إذا كنت مستعدًا للحجز.`,
+              replies: ['الباقات المتاحة', 'معلومات الاتصال']
+          },
+          'default': {
+              text: () => {
+                  return `${cfg.chatbot.fallback}
+يرجى اختيار أحد الخيارات التالية للمساعدة:`;
+              },
+              replies: ['الباقات المتاحة', 'الوثائق المطلوبة', 'معلومات الاتصال', 'خدماتنا']
+          }
+      };
 
-يمكنني مساعدتك في معلومات عن:
-• الباقات والأسعار
-• الوثائق المطلوبة  
-• خطوات الحجز
-• معلومات الاتصال
-• خدماتنا المتكاملة`;
+      // Main function to match user input to a knowledge entry
+      function getBotResponse(message) {
+          message = message.toLowerCase().trim();
+          
+          // 1. Exact match for quick replies
+          if (knowledgeBase[message] && typeof knowledgeBase[message].text === 'function') {
+              return knowledgeBase[message];
+          }
+
+          // 2. Special greeting match (High Priority)
+          if (message.includes('السلام عليكم') || message.includes('سلام')) {
+              return knowledgeBase['السلام عليكم'];
+          }
+          
+          // 3. Keyword Matching (General Search)
+          if (message.includes('باقات') || message.includes('سعر') || message.includes('أسعار')) {
+              return knowledgeBase['الأسعار'];
+          }
+          
+          if (message.includes('وثائق') || message.includes('مستندات') || message.includes('أوراق') || message.includes('تأشيرة')) {
+              return knowledgeBase['الوثائق المطلوبة'];
+          }
+          
+          if (message.includes('اتصال') || message.includes('رقم') || message.includes('هاتف') || message.includes('عنوان') || message.includes('تواصل')) {
+              return knowledgeBase['معلومات الاتصال'];
+          }
+          
+          if (message.includes('خدمات') || message.includes('ماذا تقدم') || message.includes('يشمل')) {
+              return knowledgeBase['خدماتنا'];
+          }
+          
+          if (message.includes('خطوات') || message.includes('حجز') || message.includes('كيف أحجز') || message.includes('بدء')) {
+              return knowledgeBase['خطوات الحجز'];
+          }
+          
+          if (message.includes('تقسيط') || message.includes('دفع')) {
+              return knowledgeBase['هل توفرون التقسيط؟'];
+          }
+          
+          if (message.includes('إلغاء') || message.includes('تعديل')) {
+              return knowledgeBase['هل يمكنني الإلغاء؟'];
+          }
+
+          if (message.includes('مرشد') || message.includes('ديني')) {
+              return knowledgeBase['هل يوجد مرشد ديني؟'];
+          }
+
+          if (message.includes('شكرا') || message.includes('thanks')) {
+              return knowledgeBase['شكرا لك'];
+          }
+
+          // 4. Default fallback response
+          return knowledgeBase['default'];
       }
-    };
-
-    // Chatbot response function
-    function getBotResponse(message) {
-      message = message.toLowerCase();
       
-      if (message.includes('باقات') || message.includes('أسعار') || message.includes('سعر')) {
-        return knowledgeBase['الأسعار']();
-      } else if (message.includes('وثائق') || message.includes('مستندات') || message.includes('أوراق')) {
-        return knowledgeBase['الوثائق المطلوبة']();
-      } else if (message.includes('اتصال') || message.includes('رقم') || message.includes('هاتف') || message.includes('عنوان')) {
-        return knowledgeBase['معلومات الاتصال']();
-      } else if (message.includes('خدمات') || message.includes('ماذا تقدم')) {
-        return knowledgeBase['الخدمات']();
-      } else if (message.includes('خطوات') || message.includes('حجز') || message.includes('كيف أحجز')) {
-        return knowledgeBase['خطوات الحجز']();
-      } else {
-        return knowledgeBase['default']();
+      // Function to process user message
+      function handleUserMessage(message) {
+          // Remove quick reply buttons from the previous bot message
+          const lastBotMessage = Array.from(chatbotMessages.children).reverse().find(el => el.classList.contains('bot-message'));
+          if (lastBotMessage) {
+              const qr = lastBotMessage.querySelector('.quick-questions');
+              if(qr) qr.remove();
+          }
+          
+          addMessage(message, true); 
+          
+          const responseData = getBotResponse(message);
+          const botText = typeof responseData.text === 'function' ? responseData.text() : responseData.text;
+          const replies = responseData.replies || [];
+
+          // Simulate typing delay
+          setTimeout(() => {
+              addMessage(botText, false, replies);
+          }, 1000);
       }
-    }
-
-    // Add message to chat
-    function addMessage(text, isUser = false) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-      messageDiv.textContent = text;
-      chatbotMessages.appendChild(messageDiv);
-      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
-
-    // Handle quick questions
-    document.querySelectorAll('.quick-question').forEach(button => {
-      button.addEventListener('click', () => {
-        const question = button.getAttribute('data-question');
-        addMessage(question, true);
+      
+      // Handle Chatbot Events
+      chatbotSend.addEventListener('click', () => {
+        const message = chatbotInput.value.trim();
+        if (!message) return;
         
-        setTimeout(() => {
-          const response = getBotResponse(question);
-          addMessage(response);
-        }, 1000);
+        handleUserMessage(message);
+        chatbotInput.value = '';
       });
-    });
 
-    // Handle user input
-    chatbotSend.addEventListener('click', sendMessage);
-    chatbotInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
+      chatbotInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const message = chatbotInput.value.trim();
+          if (!message) return;
+          
+          handleUserMessage(message);
+          chatbotInput.value = '';
+        }
+      });
+      
+      chatbotBtn.addEventListener('click', () => {
+        chatbotWin.style.display = chatbotWin.style.display === 'flex' ? 'none' : 'flex';
+        
+        if (chatbotWin.style.display === 'flex') {
+            if (chatbotMessages.children.length === 0) { 
+                const welcomeData = knowledgeBase['initial'];
+                // Execute the function to get the dynamic text
+                addMessage(welcomeData.text(), false, welcomeData.replies); 
+            }
+        }
+      });
 
-    function sendMessage() {
-      const message = chatbotInput.value.trim();
-      if (!message) return;
+      chatbotClose.addEventListener('click', () => {
+        chatbotWin.style.display = 'none';
+      });
+      // --- CHATBOT LOGIC END ---
       
-      addMessage(message, true);
-      chatbotInput.value = '';
       
-      setTimeout(() => {
-        const response = getBotResponse(message);
-        addMessage(response);
-      }, 1000);
-    }
+      // --- REST OF SITE LOGIC ---
 
-// Contact Form Handler
-document.addEventListener('DOMContentLoaded', function() {
-  const contactForm = document.querySelector('.contact-form form');
-  
-  if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const cfg = window.SHARQIA_CONFIG;
-      
-      // Get form data
-      const name = document.getElementById('name').value;
-      const phone = document.getElementById('phone').value;
-      const email = document.getElementById('email').value;
-      const package = document.getElementById('package').value;
-      const message = document.getElementById('message').value;
-      
-      // Validate
-      if (!name || !phone || !message) {
-        alert('الرجاء ملء جميع الحقول المطلوبة');
-        return;
+      // Enhanced Header Auto Hide/Show
+      let lastScroll = 0;
+      const header = document.getElementById('mainHeader');
+      const scrollThreshold = 10; 
+      let ticking = false;
+
+      function updateHeaderVisibility() {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll <= 0) {
+          header.classList.remove('header-hidden');
+          return;
+        }
+        
+        if (currentScroll < lastScroll - scrollThreshold) {
+          header.classList.remove('header-hidden');
+        } else if (currentScroll > lastScroll + scrollThreshold) {
+          header.classList.add('header-hidden');
+        }
+        
+        lastScroll = currentScroll;
+        ticking = false;
       }
+
+      function requestTick() {
+        if (!ticking) {
+          requestAnimationFrame(updateHeaderVisibility);
+          ticking = true;
+        }
+      }
+
+      window.addEventListener('scroll', requestTick, { passive: true });
+
+      // Mobile Menu Toggle
+      const mobileToggle = document.getElementById('mobileMenuToggle');
+      const mobileNav = document.getElementById('mobileNav');
+      const overlay = document.getElementById('overlay');
+      const mobileClose = document.getElementById('mobileNavClose');
+
+      mobileToggle.addEventListener('click', () => {
+        mobileNav.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        mobileNav.scrollTop = 0;
+      });
+
+      [mobileClose, overlay].forEach(el => {
+        el.addEventListener('click', () => {
+          mobileNav.classList.remove('active');
+          overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      });
+
+      // FAQ Toggle
+      document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+          const faqItem = question.parentElement;
+          faqItem.classList.toggle('active');
+        });
+      });
+
+      // Scroll Top Button
+      const scrollTopBtn = document.getElementById('scrollTop');
+      window.addEventListener('scroll', () => {
+        scrollTopBtn.classList.toggle('visible', window.pageYOffset > 400);
+      });
+      scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Gallery Tabs
+      document.querySelectorAll('.gallery-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+        });
+      });
+
+      // Contact Form Handler
+      const contactForm = document.querySelector('.contact-form form');
       
-      // Create WhatsApp message
-      const whatsappMessage = `
+      if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const cfg = window.SHARQIA_CONFIG;
+          
+          const name = document.getElementById('name').value;
+          const phone = document.getElementById('phone').value;
+          const email = document.getElementById('email').value;
+          const package = document.getElementById('package').value;
+          const message = document.getElementById('message').value;
+          
+          if (!name || !phone || !message) {
+            alert('الرجاء ملء جميع الحقول المطلوبة');
+            return;
+          }
+          
+          const whatsappMessage = `
 🕌 *استفسار جديد من الموقع*
 
 👤 *الاسم:* ${name}
@@ -2101,50 +2178,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
 💬 *الرسالة:*
 ${message}
-      `.trim();
+          `.trim();
+          
+          const whatsappUrl = `https://wa.me/${cfg.contact.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+          window.open(whatsappUrl, '_blank');
+          
+          alert('شكراً لتواصلك! سيتم توجيهك إلى واتساب لإتمام الاستفسار');
+          
+          contactForm.reset();
+        });
+      }
       
-      // Open WhatsApp
-      const whatsappUrl = `https://wa.me/${cfg.contact.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
-      window.open(whatsappUrl, '_blank');
-      
-      // Show success message
-      alert('شكراً لتواصلك! سيتم توجيهك إلى واتساب لإتمام الاستفسار');
-      
-      // Reset form
-      contactForm.reset();
-    });
-  }
-  
-  // Handle CTA buttons throughout the site
-  document.querySelectorAll('.cta-button').forEach(btn => {
-    if (!btn.closest('form')) { // Skip form submit buttons
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const cfg = window.SHARQIA_CONFIG;
-        const message = 'مرحباً! أرغب في الاستفسار عن باقات العمرة';
-        const whatsappUrl = `https://wa.me/${cfg.contact.whatsapp}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-      });
-    }
-  });
-});
-
-  // Fade-in effect on scroll
-  document.addEventListener("DOMContentLoaded", function() {
-    const mapContainer = document.getElementById('map-container');
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          mapContainer.classList.add('visible');
-          observer.unobserve(mapContainer);
+      // Handle CTA buttons throughout the site
+      document.querySelectorAll('.cta-button').forEach(btn => {
+        if (!btn.closest('form')) { 
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const cfg = window.SHARQIA_CONFIG;
+            const message = 'مرحباً! أرغب في الاستفسار عن باقات العمرة';
+            const whatsappUrl = `https://wa.me/${cfg.contact.whatsapp}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+          });
         }
       });
-    }, { threshold: 0.3 });
 
-    observer.observe(mapContainer);
-  });
+      // Fade-in effect on scroll
+      const mapContainer = document.getElementById('map-container');
 
-</script>
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            mapContainer.classList.add('visible');
+            observer.unobserve(mapContainer);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      observer.observe(mapContainer);
+    });
+  </script>
+
+
 </body>
 </html>
