@@ -11,19 +11,20 @@
   <script src="config.js"></script>
   <style>
     :root {
-      /* --- LOGO MAIN COLORS --- */
-      --primary: #002D62;         /* Deep Blue/Navy */
-      --secondary: #FF9900;     /* Orange/Gold */
-      /* ------------------------ */
-      --accent: #8B4513; /* Kept for general brown if needed */
+      --primary: #002D62;
+      --secondary: #FF9900;
+      --accent: #8B4513;
       --light: #fdfdfd;
       --dark: #1a1a1a;
-      --success: #28a745; /* Kept standard green for 'success' icon/text */
-      --whatsapp: #25D366; /* Kept standard green for WhatsApp */
-      --gradient-start: var(--primary); 
-      --gradient-end: #004F98; /* Lighter shade of Navy Blue */
-      /* NEW CSS VARIABLE FOR HEADER HEIGHT */
-      --header-height: 86px; /* Approx height of your header + padding */
+      --success: #28a745;
+      --whatsapp: #25D366;
+      --gradient-start: var(--primary);
+      --gradient-end: #004F98;
+      --header-height: 86px;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+      --transition-smooth: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     * {
@@ -38,8 +39,7 @@
       color: var(--dark);
       line-height: 1.7;
       overflow-x: hidden;
-      /* Add body padding to prevent content from hiding behind fixed header */
-      padding-top: var(--header-height); 
+      padding-top: var(--header-height);
     }
 
     .container {
@@ -49,22 +49,82 @@
       padding: 0 20px;
     }
 
+    /* Premium Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(255, 153, 0, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(255, 153, 0, 0.8); }
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+      70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+
+    @keyframes logo-pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+      40% {transform: translateY(-12px);}
+      60% {transform: translateY(-6px);}
+    }
+
+    /* Premium Button Styles */
     .btn {
       padding: 16px 42px;
       border-radius: 50px;
       text-decoration: none;
       font-weight: 700;
       font-size: 1.15rem;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: var(--transition-smooth);
       display: inline-block;
       text-align: center;
       border: none;
       cursor: pointer;
       letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.7s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
     }
 
     .btn-primary {
-      /* Primary button uses secondary color (Orange/Gold) */
       background: linear-gradient(135deg, var(--secondary), #E08700);
       color: white;
       box-shadow: 0 6px 20px rgba(255, 153, 0, 0.4);
@@ -90,6 +150,20 @@
       box-shadow: 0 10px 25px rgba(37, 211, 102, 0.6);
     }
 
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      box-shadow: 0 4px 15px rgba(0, 45, 98, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-4px);
+    }
+
+    /* Premium Section Styling */
     .section-title {
       text-align: center;
       margin-bottom: 60px;
@@ -136,6 +210,7 @@
       border: 0;
     }
 
+    /* Premium Header with Glass Effect */
     header {
       background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
       color: white;
@@ -145,15 +220,14 @@
       left: 0;
       width: 100%;
       z-index: 1000;
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 6px 20px rgba(0, 45, 98, 0.25); 
+      box-shadow: 0 6px 20px rgba(0, 45, 98, 0.25);
       transition: transform 0.4s ease;
+      backdrop-filter: blur(10px);
+      background-color: rgba(0, 45, 98, 0.9);
     }
 
-    /* EXISTING CLASS FOR SCROLL-HIDE IS 'header-hidden' */
     .header-hidden {
-      /* Use the CSS variable for dynamic hiding */
-      transform: translateY(calc(-1 * var(--header-height))); 
+      transform: translateY(calc(-1 * var(--header-height)));
     }
 
     .header-container {
@@ -167,40 +241,16 @@
       align-items: center;
       gap: 18px;
     }
-    
-    /* New style for the logo image */
+
     .logo-img {
-      height: 70px; /* Logo image height */
+      height: 70px;
       width: auto;
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid var(--secondary);
-      margin-right: -10px; /* Optional: adjust spacing */
-      /* NEW: Add a drop shadow to make the logo pop on the dark header */
+      margin-right: -10px;
       filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
-      /* NEW: Pulsing animation */
-      animation: logo-pulse 2s infinite;
-    }
-
-    @keyframes logo-pulse {
-       0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
-            }
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
-            }
-    }
-
-    .logo i {
-      font-size: 2.8rem;
-      color: var(--secondary);
-      text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      animation: logo-pulse 2s infinite, float 5s ease-in-out infinite;
     }
 
     .logo h1 {
@@ -275,13 +325,13 @@
       font-weight: 700;
       cursor: pointer;
       transition: all 0.4s ease;
-      box-shadow: 0 5px 18px rgba(255, 153, 0, 0.4); /* Shadow adjusted to Orange/Gold */
+      box-shadow: 0 5px 18px rgba(255, 153, 0, 0.4);
       font-size: 1.05rem;
     }
 
     .cta-button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 22px rgba(255, 153, 0, 0.6); /* Shadow adjusted to Orange/Gold */
+      box-shadow: 0 8px 22px rgba(255, 153, 0, 0.6);
     }
 
     .mobile-menu-toggle {
@@ -347,7 +397,6 @@
       cursor: pointer;
     }
 
-    /* NEW: Mobile nav logo with animation */
     .mobile-nav-logo {
       text-align: center;
       margin-bottom: 30px;
@@ -358,12 +407,6 @@
       height: 80px;
       width: auto;
       filter: drop-shadow(0 0 10px rgba(255, 153, 0, 0.5));
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
     }
 
     .overlay {
@@ -381,17 +424,16 @@
       display: block;
     }
 
+    /* Premium Hero Section */
     .hero {
-      /* Remove background image and gradient */
-      background: none;
+      position: relative;
       color: white;
       padding: 180px 0 120px;
       text-align: center;
-      position: relative;
-      background-color: var(--primary); /* Use primary color as fallback */
+      background: linear-gradient(135deg, var(--primary), var(--gradient-end));
+      overflow: hidden;
     }
-    
-    /* Updated hero background with logo only */
+
     .hero::before {
       content: '';
       position: absolute;
@@ -399,26 +441,32 @@
       left: 0;
       width: 100%;
       height: 100%;
-      /* Use logo.png for the background */
-      background-image: url('logo.png'); 
+      background-image: url('logo.png');
       background-repeat: no-repeat;
       background-position: center;
-      background-size: contain; 
-      opacity: 0.8; /* Make it subtle */
-      z-index: 0; 
+      background-size: contain;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 80%, rgba(255, 153, 0, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(0, 45, 98, 0.15) 0%, transparent 50%);
+      z-index: 0;
     }
 
     .hero-content {
       max-width: 850px;
       margin: 0 auto;
       animation: fadeInUp 1.2s ease;
-      position: relative; 
-      z-index: 1; 
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
+      position: relative;
+      z-index: 1;
     }
 
     .hero h2 {
@@ -447,6 +495,7 @@
       flex-wrap: wrap;
     }
 
+    /* Premium Features Section */
     .features {
       padding: 100px 0;
       background: white;
@@ -463,8 +512,8 @@
       border-radius: 16px;
       padding: 35px 30px;
       text-align: center;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-smooth);
       border: 1px solid #f0f0f0;
       position: relative;
       overflow: hidden;
@@ -481,7 +530,7 @@
       background-repeat: no-repeat;
       background-position: center;
       background-size: contain;
-      opacity: 0.15; /* Medium opacity */
+      opacity: 0.15;
       z-index: 0;
     }
 
@@ -492,14 +541,12 @@
 
     .feature-card:hover {
       transform: translateY(-12px);
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 18px 40px rgba(0, 45, 98, 0.12); 
+      box-shadow: 0 18px 40px rgba(0, 45, 98, 0.12);
     }
 
     .feature-icon {
       width: 90px;
       height: 90px;
-      /* Background adjusted from green/gold to primary/secondary colors */
       background: linear-gradient(135deg, rgba(0, 45, 98, 0.1), rgba(255, 153, 0, 0.15));
       border-radius: 50%;
       display: flex;
@@ -508,8 +555,13 @@
       margin: 0 auto 25px;
       color: var(--primary);
       font-size: 2.2rem;
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 4px 12px rgba(0, 45, 98, 0.08); 
+      box-shadow: 0 4px 12px rgba(0, 45, 98, 0.08);
+      transition: var(--transition-smooth);
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.1);
+      animation: glow 2s infinite;
     }
 
     .feature-card h3 {
@@ -519,10 +571,50 @@
       font-weight: 700;
     }
 
+    /* Premium Stats Section */
+    .stats {
+      padding: 80px 0;
+      background: linear-gradient(135deg, var(--primary), var(--gradient-end));
+      color: white;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 30px 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid var(--glass-border);
+      transition: var(--transition-smooth);
+    }
+
+    .stat-item:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--secondary);
+    }
+
+    .stat-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* Premium Packages Section */
     .packages {
       padding: 100px 0;
-      /* Background adjusted from green to primary color */
-      background: linear-gradient(to bottom, #fbfbfb, #f0f3f5); 
+      background: linear-gradient(to bottom, #fbfbfb, #f0f3f5);
     }
 
     .packages-grid {
@@ -536,14 +628,13 @@
       border-radius: 18px;
       overflow: hidden;
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.09);
-      transition: all 0.4s ease;
+      transition: var(--transition-smooth);
       position: relative;
     }
 
     .package-card:hover {
       transform: translateY(-12px);
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 20px 50px rgba(0, 45, 98, 0.18); 
+      box-shadow: 0 20px 50px rgba(0, 45, 98, 0.18);
     }
 
     .package-header {
@@ -595,8 +686,7 @@
     .package-card.featured {
       transform: scale(1.06);
       border: 3px solid var(--secondary);
-      /* Shadow adjusted from gold to secondary color */
-      box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.15); 
+      box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.15);
     }
 
     .package-card.featured .package-header {
@@ -615,8 +705,10 @@
       left: 25px;
       z-index: 3;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      animation: glow 2s infinite;
     }
 
+    /* Steps Section */
     .steps {
       padding: 100px 0;
       background: white;
@@ -651,8 +743,7 @@
       margin: 0 auto 25px;
       position: relative;
       z-index: 2;
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 6px 15px rgba(0, 45, 98, 0.3); 
+      box-shadow: 0 6px 15px rgba(0, 45, 98, 0.3);
     }
 
     .step:not(:last-child):after {
@@ -673,10 +764,10 @@
       font-weight: 700;
     }
 
+    /* Premium Testimonials */
     .testimonials {
       padding: 100px 0;
-      /* Background adjusted from green to primary color */
-      background: linear-gradient(to bottom, #f0f3f5, #fbfbfb); 
+      background: linear-gradient(to bottom, #f0f3f5, #fbfbfb);
     }
 
     .testimonials-grid {
@@ -692,13 +783,18 @@
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
       position: relative;
       border-top: 4px solid var(--secondary);
+      transition: var(--transition-smooth);
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     }
 
     .testimonial-card:before {
       content: '"';
       font-size: 5.5rem;
-      /* Color adjusted to secondary color */
-      color: rgba(255, 153, 0, 0.1); 
+      color: rgba(255, 153, 0, 0.1);
       position: absolute;
       top: 15px;
       right: 30px;
@@ -744,6 +840,7 @@
       font-size: 1rem;
     }
 
+    /* Media Gallery Section */
     .media-gallery {
       padding: 100px 0;
       background: white;
@@ -773,8 +870,7 @@
     .gallery-tab.active {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 5px 15px rgba(0, 45, 98, 0.2); 
+      box-shadow: 0 5px 15px rgba(0, 45, 98, 0.2);
     }
 
     .gallery-tab:hover:not(.active) {
@@ -798,8 +894,7 @@
 
     .gallery-item:hover {
       transform: translateY(-8px);
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 15px 30px rgba(0, 45, 98, 0.2); 
+      box-shadow: 0 15px 30px rgba(0, 45, 98, 0.2);
     }
 
     .gallery-item img, .gallery-item video {
@@ -818,8 +913,7 @@
       bottom: 0;
       right: 0;
       left: 0;
-      /* Background adjusted from green to primary color */
-      background: linear-gradient(to top, rgba(0, 45, 98, 0.85), transparent); 
+      background: linear-gradient(to top, rgba(0, 45, 98, 0.85), transparent);
       color: white;
       padding: 25px;
       transform: translateY(100%);
@@ -873,10 +967,10 @@
       margin-top: 45px;
     }
 
+    /* FAQ Section */
     .faq-section {
       padding: 100px 0;
-      /* Background adjusted from green to primary color */
-      background: #f9fbf9; 
+      background: #f9fbf9;
     }
 
     .faq-item {
@@ -900,8 +994,7 @@
     }
 
     .faq-question:hover {
-      /* Background adjusted from green to primary color */
-      background: #f0f4f8; 
+      background: #f0f4f8;
     }
 
     .faq-answer {
@@ -923,38 +1016,28 @@
       transition: transform 0.3s ease;
     }
 
-     .map-section {
-    padding: 60px 0;
-    background: white;
-  }
-
-  .map-container {
-    height: 400px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transform: translateY(50px);
-    transition: all 1s ease;
-  }
-
-  .map-container.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  @media (max-width: 768px) {
-    .map-container {
-      height: 300px;
+    /* Map Section */
+    .map-section {
+      padding: 60px 0;
+      background: white;
     }
-  }
 
-  @media (max-width: 480px) {
     .map-container {
-      height: 250px;
+      height: 400px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s ease;
     }
-  }
 
+    .map-container.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Contact Section */
     .contact {
       padding: 100px 0;
       background: white;
@@ -981,8 +1064,7 @@
     .contact-icon {
       width: 60px;
       height: 60px;
-      /* Background adjusted from green/gold to primary/secondary colors */
-      background: linear-gradient(135deg, rgba(0, 45, 98, 0.12), rgba(255, 153, 0, 0.08)); 
+      background: linear-gradient(135deg, rgba(0, 45, 98, 0.12), rgba(255, 153, 0, 0.08));
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -990,8 +1072,7 @@
       color: var(--primary);
       font-size: 1.4rem;
       flex-shrink: 0;
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 4px 10px rgba(0, 45, 98, 0.08); 
+      box-shadow: 0 4px 10px rgba(0, 45, 98, 0.08);
     }
 
     .contact-details h4 {
@@ -1001,11 +1082,10 @@
     }
 
     .contact-form {
-      /* Background and border adjusted from green to primary color */
-      background: #f9fbf9; 
+      background: #f9fbf9;
       padding: 35px;
       border-radius: 16px;
-      border: 1px solid #eef0f5; 
+      border: 1px solid #eef0f5;
     }
 
     .form-group {
@@ -1023,8 +1103,7 @@
     .form-control {
       width: 100%;
       padding: 14px 18px;
-      /* Border adjusted from green to primary color */
-      border: 1px solid #d5dce5; 
+      border: 1px solid #d5dce5;
       border-radius: 10px;
       font-size: 1.05rem;
       transition: all 0.3s ease;
@@ -1033,40 +1112,39 @@
 
     .form-control:focus {
       border-color: var(--secondary);
-      /* Shadow adjusted to secondary color */
-      box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2); 
+      box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
       outline: none;
     }
 
+    /* Premium Footer */
     footer {
       background: linear-gradient(135deg, var(--gradient-start), var(--primary));
       color: white;
       padding: 70px 0 30px;
     }
-    
-    /* FIX: ADDED MISSING FOOTER-CONTAINER LAYOUT */
+
     .footer-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 50px;
       padding-bottom: 40px;
     }
-    /* END FIX */
 
-    /* New style for footer logo */
+    .footer-logo {
+      height: 70px;
+      width: auto;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--secondary);
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
+      animation: logo-pulse 2s infinite, float 5s ease-in-out infinite;
+    }
+
     .footer-logo-container {
       display: flex;
       align-items: center;
       gap: 15px;
       margin-bottom: 22px;
-    }
-
-    .footer-logo-container img {
-      height: 60px; /* Adjust size as needed */
-      width: auto;
-      /* Required: The footer logo must use logo.jpg */
-      /* Optional: Adjust for visibility on dark background */
-      filter: drop-shadow(0 0 8px rgba(255, 153, 0, 0.5)); 
     }
 
     .footer-col h3 {
@@ -1097,8 +1175,7 @@
     }
 
     .footer-col a {
-      /* Color adjusted from green to blue */
-      color: #e0e5f0; 
+      color: #e0e5f0;
       text-decoration: none;
       transition: all 0.3s ease;
       font-weight: 500;
@@ -1142,6 +1219,7 @@
       color: #ccc;
     }
 
+    /* Premium Floating Elements */
     .whatsapp-float {
       position: fixed;
       width: 70px;
@@ -1158,18 +1236,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.4s ease;
+      transition: var(--transition-smooth);
       animation: pulse 2s infinite;
     }
 
     .whatsapp-float:hover {
       transform: scale(1.15) rotate(10deg);
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-      70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
     }
 
     .scroll-top {
@@ -1187,9 +1259,8 @@
       cursor: pointer;
       z-index: 99;
       opacity: 0;
-      transition: all 0.4s ease;
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 5px 15px rgba(0, 45, 98, 0.3); 
+      transition: var(--transition-smooth);
+      box-shadow: 0 5px 15px rgba(0, 45, 98, 0.3);
     }
 
     .scroll-top.visible {
@@ -1200,6 +1271,7 @@
       transform: translateY(-5px) rotate(5deg);
     }
 
+    /* Premium Chatbot */
     .chatbot-container {
       position: fixed;
       bottom: 30px;
@@ -1216,16 +1288,9 @@
       justify-content: center;
       font-size: 26px;
       cursor: pointer;
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 6px 25px rgba(0, 45, 98, 0.4); 
-      transition: all 0.4s ease;
+      box-shadow: 0 6px 25px rgba(0, 45, 98, 0.4);
+      transition: var(--transition-smooth);
       animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-      40% {transform: translateY(-12px);}
-      60% {transform: translateY(-6px);}
     }
 
     .chatbot-button:hover {
@@ -1240,8 +1305,7 @@
       height: 520px;
       background: white;
       border-radius: 20px;
-      /* Shadow adjusted from green to primary color */
-      box-shadow: 0 10px 40px rgba(0, 45, 98, 0.25); 
+      box-shadow: 0 10px 40px rgba(0, 45, 98, 0.25);
       display: none;
       flex-direction: column;
       overflow: hidden;
@@ -1292,8 +1356,7 @@
     }
 
     .bot-message {
-      /* Background adjusted from green to primary color */
-      background: #f0f4f8; 
+      background: #f0f4f8;
       color: #222;
       align-self: flex-start;
       border-bottom-right-radius: 6px;
@@ -1314,8 +1377,7 @@
     }
 
     .quick-question {
-      /* Background adjusted from green to primary color */
-      background: #e8f0f8; 
+      background: #e8f0f8;
       border: none;
       border-radius: 22px;
       padding: 10px 18px;
@@ -1327,8 +1389,7 @@
     }
 
     .quick-question:hover {
-      /* Background adjusted from green to primary color */
-      background: #d4e0ed; 
+      background: #d4e0ed;
       transform: translateY(-2px);
     }
 
@@ -1367,13 +1428,13 @@
       transform: scale(1.1);
     }
 
+    /* Mobile Responsiveness */
     @media (max-width: 992px) {
       .package-card.featured { transform: scale(1); }
       .step:not(:last-child):after { display: none; }
     }
 
     @media (max-width: 768px) {
-      /* Update the body padding-top for mobile fixed header */
       body {
         padding-top: var(--header-height);
       }
@@ -1385,22 +1446,11 @@
       .scroll-top { left: 20px; bottom: 90px; }
       .hero h2 { font-size: 2.6rem; }
       .hero p { font-size: 1.2rem; }
-
-      /* FOOTER MOBILE ADJUSTMENTS */
-      .footer-col {
-          text-align: center; /* Center footer content on mobile */
-      }
-      .footer-col h3:after {
-          right: 50%;
-          transform: translateX(50%); /* Center the underline */
-      }
-      .social-links {
-          justify-content: center; /* Center social icons */
-      }
-      .footer-logo-container {
-           justify-content: center; /* Center logo and name */
-      }
-      /* END FOOTER MOBILE ADJUSTMENTS */
+      .footer-col { text-align: center; }
+      .footer-col h3:after { right: 50%; transform: translateX(50%); }
+      .social-links { justify-content: center; }
+      .footer-logo-container { justify-content: center; }
+      .map-container { height: 300px; }
     }
 
     @media (max-width: 576px) {
@@ -1411,6 +1461,7 @@
       .gallery-tab { width: 100%; max-width: 260px; }
       .gallery-grid { grid-template-columns: 1fr; }
       .section-title h2 { font-size: 2.3rem; }
+      .map-container { height: 250px; }
     }
   </style>
 </head>
@@ -1430,6 +1481,7 @@
           <li><a href="#الرئيسية">الرئيسية</a></li>
           <li><a href="#من-نحن">من نحن</a></li>
           <li><a href="#باقاتنا">باقاتنا</a></li>
+          <li><a href="#إحصائيات">إحصائيات</a></li>
           <li><a href="#خدماتنا">خدماتنا</a></li>
           <li><a href="#معرض-الوسائط">معرض الوسائط</a></li>
           <li><a href="#الأسئلة-الشائعة">الأسئلة الشائعة</a></li>
@@ -1447,6 +1499,8 @@
       </button>
     </div>
   </header>
+
+  <!-- Mobile Navigation -->
   <div class="overlay" id="overlay"></div>
   <nav class="mobile-nav" id="mobileNav" aria-label="القائمة الرئيسية للجوال">
     <button class="mobile-nav-close" id="mobileNavClose" aria-label="إغلاق القائمة">
@@ -1459,6 +1513,7 @@
       <li><a href="#الرئيسية">الرئيسية</a></li>
       <li><a href="#من-نحن">من نحن</a></li>
       <li><a href="#باقاتنا">باقاتنا</a></li>
+      <li><a href="#إحصائيات">إحصائيات</a></li>
       <li><a href="#خدماتنا">خدماتنا</a></li>
       <li><a href="#معرض-الوسائط">معرض الوسائط</a></li>
       <li><a href="#الأسئلة-الشائعة">الأسئلة الشائعة</a></li>
@@ -1469,10 +1524,12 @@
       <li><button class="cta-button" style="width:100%;margin-top:10px;">احجز الآن</button></li>
     </ul>
   </nav>
+
+  <!-- Hero Section -->
   <section class="hero" id="الرئيسية">
     <div class="container hero-content">
-      <h2 id="hero-title">معتمرونا... أمانة بين أيدينا</h2>
-      <p id="hero-subtitle">نحوّل حلمك بأداء العمرة إلى واقع ميسر مع خدمات شاملة تغطي كل تفاصيل رحلتك من لحظة التفكير حتى العودة</p>
+      <h2 id="hero-title">Loading...</h2>
+      <p id="hero-subtitle">Loading...</p>
       <div class="hero-buttons">
         <a href="#باقاتنا" class="btn btn-primary">اكتشف باقاتنا</a>
         <a href="#" class="btn btn-whatsapp" id="hero-whatsapp">
@@ -1482,46 +1539,49 @@
       </div>
     </div>
   </section>
+
+  <!-- Features Section -->
   <section class="features" id="من-نحن">
     <div class="container">
       <div class="section-title">
         <h2>لماذا تختار وكالة المهاجرين ترافل؟</h2>
         <p>نفخر في وكالة المهاجرين ترافل بأننا شريكك الموثوق في رحلتك الروحية، نضمن لك تجربة عمرة ميسرة وخالية من المتاعب</p>
       </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-award"></i></div>
-          <h3>خبرة طويلة</h3>
-          <p>نتمتع بخبرة تمتد لسنوات في تنظيم رحلات العمرة باحترافية عالية</p>
+      <div class="features-grid" id="features-container">
+        <!-- Features will be loaded from config.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats" id="إحصائيات">
+    <div class="container">
+      <div class="section-title">
+        <h2 style="color: white;">إنجازاتنا بالأرقام</h2>
+        <p style="color: rgba(255,255,255,0.9);">ثقة عملائنا هي شهادتنا الحقيقية</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number" data-count="5000">0</div>
+          <div class="stat-label">معتمر راضٍ</div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-certificate"></i></div>
-          <h3>تراخيص رسمية</h3>
-          <p>نحن شركة معتمدة من الجهات الرسمية ذات الصلة، مما يضمن لك تعاملًا آمنًا ومضمونًا</p>
+        <div class="stat-item">
+          <div class="stat-number" data-count="12">0</div>
+          <div class="stat-label">سنوات خبرة</div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-concierge-bell"></i></div>
-          <h3>خدمات متكاملة</h3>
-          <p>نقدم باقة شاملة تشمل التأشيرات، الحجوزات، النقل، والإقامة لتوفر عليك عناء الترتيبات</p>
+        <div class="stat-item">
+          <div class="stat-number" data-count="98">0</div>
+          <div class="stat-label">نسبة الرضا</div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-user-friends"></i></div>
-          <h3>مرشدون دينيون</h3>
-          <p>نضع بين يديك مرشدين دينيين متخصصين ليرشدوك خلال أداء المناسك</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-headset"></i></div>
-          <h3>دعم 24/7</h3>
-          <p>فريق دعم متواجد على مدار الساعة لمساعدتك في أي استفسار أو طوارئ خلال رحلتك</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-hand-holding-usd"></i></div>
-          <h3>أسعار تنافسية</h3>
-          <p>نقدم أفضل الخدمات بأسعار تنافسية مع مرونة في الدفع وتقسيط ميسر</p>
+        <div class="stat-item">
+          <div class="stat-number" data-count="24">0</div>
+          <div class="stat-label">دعم على مدار الساعة</div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Packages Section -->
   <section class="packages" id="باقاتنا">
     <div class="container">
       <div class="section-title">
@@ -1529,9 +1589,12 @@
         <p>اختر الباقة المناسبة لاحتياجاتك واستمتع برحلة عمرة لا تُنسى</p>
       </div>
       <div class="packages-grid" id="packages-container">
-        </div>
+        <!-- Packages will be loaded from config.js -->
+      </div>
     </div>
   </section>
+
+  <!-- Steps Section -->
   <section class="steps" id="خدماتنا">
     <div class="container">
       <div class="section-title">
@@ -1547,37 +1610,21 @@
       </div>
     </div>
   </section>
+
+  <!-- Testimonials Section -->
   <section class="testimonials">
     <div class="container">
       <div class="section-title">
         <h2>آراء عملائنا</h2>
         <p>انطباعات وتجارب حقيقية من عملائنا الكرام</p>
       </div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="testimonial-text">"كنت خائفة من أول مرة أذهب فيها للعمرة، لكني فضلت التعامل مع وكالة المهاجرين ترافل، وكانت تجربة لن أنساها أبدًا..."</div>
-          <div class="testimonial-author">
-            <div class="author-avatar">ف</div>
-            <div class="author-info"><h4>فاطمة أحمد</h4><p>باتنة</p></div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-text">"أداء العمرة مع وكالة المهاجرين ترافل كان حلماً تحقق. شعرت أنني في بيت، لا في رحلة..."</div>
-          <div class="testimonial-author">
-            <div class="author-avatar">م</div>
-            <div class="author-info"><h4>محمد عبد الله</h4><p>المسيلة</p></div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-text">"رحلة العمرة مع وكالة المهاجرين ترافل كانت من أفضل التجارب في حياتي..."</div>
-          <div class="testimonial-author">
-            <div class="author-avatar">ع</div>
-            <div class="author-info"><h4>عبد الصمد محمود</h4><p>الجزائر العاصمة</p></div>
-          </div>
-        </div>
+      <div class="testimonials-grid" id="testimonials-container">
+        <!-- Testimonials will be loaded from config.js -->
       </div>
     </div>
   </section>
+
+  <!-- Media Gallery Section - EMPTY FOR YOUTUBE INTEGRATION -->
   <section class="media-gallery" id="معرض-الوسائط">
     <div class="container">
       <div class="section-title">
@@ -1590,50 +1637,42 @@
         <button class="gallery-tab" data-filter="videos">الفيديوهات</button>
         <button class="gallery-tab" data-filter="trips">رحلات العمرة</button>
       </div>
-      <div class="gallery-grid" id="drive-gallery-grid"></div>
+      <div class="gallery-grid" id="drive-gallery-grid">
+        <!-- YouTube videos will be loaded dynamically here -->
+      </div>
       <div class="gallery-load-more">
         <button class="cta-button" id="load-more-btn" style="display:none;">شاهد المزيد</button>
       </div>
     </div>
   </section>
+
+  <!-- FAQ Section -->
   <section class="faq-section" id="الأسئلة-الشائعة">
     <div class="container">
       <div class="section-title">
         <h2>الأسئلة الشائعة</h2>
         <p>إجابات على أكثر الأسئلة شيوعاً حول رحلات العمرة</p>
       </div>
-      <div class="faq-container">
-        <div class="faq-item">
-          <div class="faq-question">ما هي الوثائق المطلوبة للحصول على تأشيرة العمرة؟<i class="fas fa-chevron-down"></i></div>
-          <div class="faq-answer"><p>الوثائق المطلوبة هي: جواز سفر ساري المفعول...</p></div>
-        </div>
-        <div class="faq-item"><div class="faq-question">كم تستغرق مدة استخراج تأشيرة العمرة؟<i class="fas fa-chevron-down"></i></div><div class="faq-answer"><p>عادةً ما تستغرق عملية استخراج التأشيرة من 3 إلى 7 أيام عمل...</p></div></div>
-        <div class="faq-item"><div class="faq-question">هل يمكنني تعديل أو إلغاء الحجز؟<i class="fas fa-chevron-down"></i></div><div class="faq-answer"><p>نعم، يمكن تعديل أو إلغاء الحجز حسب الشروط...</p></div></div>
-        <div class="faq-item"><div class="faq-question">ما هي مدة رحلة العمرة النموذجية؟<i class="fas fa-chevron-down"></i></div><div class="faq-answer"><p>مدة الرحلة النموذجية تتراوح بين 10 إلى 15 يومًا...</p></div></div>
-        <div class="faq-item"><div class="faq-question">هل تقدمون خدمة التقسيط؟<i class="fas fa-chevron-down"></i></div><div class="faq-answer"><p>نعم، نقدم خيارات متعددة للدفع تشمل الدفع الكامل والتقسيط...</p></div></div>
-        <div class="faq-item"><div class="faq-question">ما هي مزايا السفر مع مجموعة؟<i class="fas fa-chevron-down"></i></div><div class="faq-answer"><p>السفر مع مجموعة يوفر لك مرشدًا دينيًا مرافقًا...</p></div></div>
+      <div class="faq-container" id="faq-container">
+        <!-- FAQ will be loaded from config.js -->
       </div>
     </div>
   </section>
+
+  <!-- Map Section -->
   <section class="map-section">
-  <div class="container">
-    <div class="section-title">
-      <h2>موقعنا</h2>
-      <p>زورونا في مكتبنا لتخطيط رحلتكم الروحية</p>
+    <div class="container">
+      <div class="section-title">
+        <h2>موقعنا</h2>
+        <p>زورونا في مكتبنا لتخطيط رحلتكم الروحية</p>
+      </div>
+      <div class="map-container fade-in" id="map-container">
+        <!-- Map will be loaded from config.js -->
+      </div>
     </div>
-    <div class="map-container fade-in" id="map-container">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3250.3021191624065!2d6.172828615124325!3d35.564291180119594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12f411cff7ae9c8f%3A0x378d13e91645f8a1!2sAlmohajirin%20Travel!5e0!3m2!1sen!2sdz!4v1700431680000!5m2!1sen!2sdz"
-        width="100%"
-        height="100%"
-        style="border:0;"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
-      </iframe>
-    </div>
-  </div>
-</section>
+  </section>
+
+  <!-- Contact Section -->
   <section class="contact" id="اتصل-بنا">
     <div class="container">
       <div class="section-title">
@@ -1642,32 +1681,36 @@
       </div>
       <div class="contact-container">
         <div class="contact-info" id="contact-info-list">
-          </div>
+          <!-- Contact info will be loaded from config.js -->
+        </div>
         <div class="contact-form">
           <h3 style="margin-bottom:22px;color:var(--primary);">أرسل لنا رسالة</h3>
-          <form>
-            <div class="form-group"><label for="name">الاسم الكامل</label><input type="text" id="name" class="form-control" placeholder="أدخل اسمك الكامل"></div>
-            <div class="form-group"><label for="phone">رقم الهاتف</label><input type="tel" id="phone" class="form-control" placeholder="أدخل رقم هاتفك"></div>
+          <form id="contactForm">
+            <div class="form-group"><label for="name">الاسم الكامل</label><input type="text" id="name" class="form-control" placeholder="أدخل اسمك الكامل" required></div>
+            <div class="form-group"><label for="phone">رقم الهاتف</label><input type="tel" id="phone" class="form-control" placeholder="أدخل رقم هاتفك" required></div>
             <div class="form-group"><label for="email">البريد الإلكتروني</label><input type="email" id="email" class="form-control" placeholder="أدخل بريدك الإلكتروني"></div>
             <div class="form-group"><label for="package">اختر الباقة</label><select id="package" class="form-control"><option>اختر الباقة المناسبة</option><option>الباقة الأساسية</option><option>الباقة المميزة</option><option>الباقة الفاخرة</option></select></div>
-            <div class="form-group"><label for="message">الرسالة</label><textarea id="message" class="form-control" rows="4" placeholder="أدخل رسالتك هنا..."></textarea></div>
+            <div class="form-group"><label for="message">الرسالة</label><textarea id="message" class="form-control" rows="4" placeholder="أدخل رسالتك هنا..." required></textarea></div>
             <button type="submit" class="cta-button" style="width:100%;">أرسل الرسالة</button>
           </form>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Footer -->
   <footer>
     <div class="container">
       <div class="footer-container">
         <div class="footer-col">
           <div class="footer-logo-container">
-             <img src="logo.png" alt="Logo Image" class="footer-logo">
-             <h3 id="footer-agency-name" style="margin:0;padding:0;border:none;">Loading...</h3>
+            <img src="logo.png" alt="Logo Image" class="footer-logo">
+            <h3 id="footer-agency-name" style="margin:0;padding:0;border:none;">Loading...</h3>
           </div>
           <p>نحوّل حلمك بأداء العمرة إلى واقع ميسر مع خدمات شاملة تغطي كل تفاصيل رحلتك من لحظة التفكير حتى العودة.</p>
           <div class="social-links" id="social-links-footer">
-            </div>
+            <!-- Social links will be loaded from config.js -->
+          </div>
         </div>
         <div class="footer-col">
           <h3>روابط سريعة</h3>
@@ -1683,18 +1726,15 @@
         </div>
         <div class="footer-col">
           <h3>باقاتنا</h3>
-          <ul>
-            <li><a href="#باقاتنا">الباقة الأساسية</a></li>
-            <li><a href="#باقاتنا">الباقة المميزة</a></li>
-            <li><a href="#باقاتنا">الباقة الفاخرة</a></li>
-            <li><a href="#باقاتنا">عروض خاصة</a></li>
-            <li><a href="#باقاتنا">رحلات جماعية</a></li>
+          <ul id="footer-packages-list">
+            <!-- Packages list will be loaded from config.js -->
           </ul>
         </div>
         <div class="footer-col">
           <h3>اتصل بنا</h3>
           <ul id="footer-contact-list">
-            </ul>
+            <!-- Contact info will be loaded from config.js -->
+          </ul>
         </div>
       </div>
       <div class="copyright">
@@ -1702,12 +1742,16 @@
       </div>
     </div>
   </footer>
+
+  <!-- Floating Elements -->
   <a href="#" class="whatsapp-float" id="whatsapp-float" target="_blank" aria-label="واتساب">
     <i class="fab fa-whatsapp" aria-hidden="true"></i>
   </a>
   <div class="scroll-top" id="scrollTop" aria-label="الانتقال إلى الأعلى">
     <i class="fas fa-chevron-up" aria-hidden="true"></i>
   </div>
+
+  <!-- Chatbot -->
   <div class="chatbot-container">
     <div class="chatbot-button" id="chatbotButton" aria-label="فتح المساعد الإفتراضي">
       <i class="fas fa-robot" aria-hidden="true"></i>
@@ -1718,16 +1762,16 @@
         <button class="chatbot-close" id="chatbotClose" aria-label="إغلاق النافذة"><i class="fas fa-times"></i></button>
       </div>
       <div class="chatbot-messages" id="chatbotMessages">
-        <div class="message bot-message" id="initial-bot-message">
-          </div>
+        <!-- Chatbot messages will be loaded dynamically -->
       </div>
       <div class="chatbot-input">
         <input type="text" id="chatbotInput" placeholder="اكتب رسالتك هنا...">
         <button id="chatbotSend" aria-label="إرسال"><i class="fas fa-paper-plane"></i></button>
       </div>
     </div>
-  </div>  
-   
+  </div>
+
+  <!-- JavaScript -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const cfg = window.SHARQIA_CONFIG;
@@ -1736,7 +1780,7 @@
         return;
       }
       
-      // --- تهيئة إعدادات الموقع العامة (Configuration Initialization) ---
+      // --- Configuration Initialization ---
       document.title = cfg.seo.title;
       document.getElementById('meta-description').content = cfg.seo.description;
       document.getElementById('meta-keywords').content = cfg.seo.keywords;
@@ -1749,12 +1793,30 @@
           logoText.style.marginRight = '10px';
       }
 
+      // Update hero section
+      document.getElementById('hero-title').textContent = cfg.hero.title;
+      document.getElementById('hero-subtitle').textContent = cfg.hero.subtitle;
+
+      // Update WhatsApp links
       const waUrl = `https://wa.me/${cfg.contact.whatsapp}`;
       document.getElementById('whatsapp-header-link').href = waUrl;
       document.getElementById('whatsapp-mobile-link').href = waUrl;
       document.getElementById('hero-whatsapp').href = waUrl;
       document.getElementById('whatsapp-float').href = waUrl;
 
+      // Update features section
+      const featuresContainer = document.getElementById('features-container');
+      if (featuresContainer) {
+        featuresContainer.innerHTML = cfg.features.map(feature => `
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas ${feature.icon}"></i></div>
+            <h3>${feature.title}</h3>
+            <p>${feature.description}</p>
+          </div>
+        `).join('');
+      }
+
+      // Update packages section
       const pkgGrid = document.getElementById('packages-container');
       if (pkgGrid) {
         pkgGrid.innerHTML = cfg.packages.map(p => `
@@ -1763,7 +1825,7 @@
             <div class="package-header">
               <h3>${p.name}</h3>
               <div class="package-price">${p.price}</div>
-              <p>تبدأ من</p>
+              <p>${p.description}</p>
             </div>
             <div class="package-features">
               <ul>${p.features.map(f => `<li>${f}</li>`).join('')}</ul>
@@ -1776,6 +1838,32 @@
         `).join('');
       }
 
+      // Update testimonials section
+      const testimonialsContainer = document.getElementById('testimonials-container');
+      if (testimonialsContainer) {
+        testimonialsContainer.innerHTML = cfg.testimonials.map(t => `
+          <div class="testimonial-card">
+            <div class="testimonial-text">${t.text}</div>
+            <div class="testimonial-author">
+              <div class="author-avatar">${t.avatar}</div>
+              <div class="author-info"><h4>${t.name}</h4><p>${t.location}</p></div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Update FAQ section
+      const faqContainer = document.getElementById('faq-container');
+      if (faqContainer) {
+        faqContainer.innerHTML = cfg.faq.map(item => `
+          <div class="faq-item">
+            <div class="faq-question">${item.question}<i class="fas fa-chevron-down"></i></div>
+            <div class="faq-answer"><p>${item.answer}</p></div>
+          </div>
+        `).join('');
+      }
+
+      // Update contact info
       const contactInfo = document.getElementById('contact-info-list');
       if (contactInfo) {
         contactInfo.innerHTML = `
@@ -1802,6 +1890,23 @@
         `;
       }
 
+      // Update map
+      const mapContainer = document.getElementById('map-container');
+      if (mapContainer) {
+        mapContainer.innerHTML = `
+          <iframe
+            src="${cfg.contact.mapEmbedUrl}"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        `;
+      }
+
+      // Update footer
       document.getElementById('footer-agency-name').textContent = cfg.agency.name;
       document.getElementById('copyright-text').innerHTML = `جميع الحقوق محفوظة © ${cfg.agency.copyrightYear} ${cfg.agency.name}`;
 
@@ -1819,6 +1924,11 @@
         <li><i class="fab fa-whatsapp"></i> ${cfg.contact.whatsapp}</li>
         <li><i class="fas fa-envelope"></i> ${cfg.contact.email}</li>
       `;
+
+      // Update footer packages list
+      document.getElementById('footer-packages-list').innerHTML = cfg.packages.map(p => `
+        <li><a href="#باقاتنا">${p.name}</a></li>
+      `).join('');
 
       // --- CHATBOT LOGIC START ---
       const chatbotMessages = document.getElementById('chatbotMessages');
@@ -1861,73 +1971,42 @@
       // Enhanced Site Knowledge Base with all custom responses
       const knowledgeBase = {
           'initial': {
-              // رسالة ترحيب Modular باستخدام اسم الوكالة
-              text: () => `السلام عليكم، أنا مساعدك الآلي من وكالة **${cfg.agency.name}**.
-              \n\n${cfg.chatbot.welcome}`,
-              replies: ['الباقات المتاحة', 'الأسعار', 'معلومات الاتصال']
+              text: () => cfg.chatbot.welcome,
+              replies: cfg.chatbot.quickReplies.initial
           },
-          // الرد الخاص على التحية
           'السلام عليكم': {
               text: () => `وعليكم السلام ورحمة الله وبركاته. كيف يمكنني مساعدتك اليوم في رحلتك الروحانية؟`,
               replies: ['الباقات المتاحة', 'معلومات الاتصال', 'خطوات الحجز']
           },
           'الباقات المتاحة': {
               text: () => {
-                  return `نقدم ثلاث باقات رئيسية للعمرة:
-• ${cfg.packages[0].name} - ${cfg.packages[0].price}
-• ${cfg.packages[1].name} - ${cfg.packages[1].price}
-• ${cfg.packages[2].name} - ${cfg.packages[2].price}
-الباقة المميزة هي الأكثر شيوعاً بين عملائنا.`;
+                  return `نقدم ${cfg.packages.length} باقات رئيسية للعمرة:\n${cfg.packages.map(p => `• ${p.name} - ${p.price}`).join('\n')}\n\nالباقة المميزة هي الأكثر شيوعاً بين عملائنا.`;
               },
-              replies: ['الأسعار', 'خطوات الحجز', 'الوثائق المطلوبة']
+              replies: cfg.chatbot.quickReplies.packages
           },
           'الأسعار': {
               text: () => {
-                  return `أسعار باقاتنا تبدأ من:
-• الباقة الأساسية: ${cfg.packages[0].price}
-• الباقة المميزة: ${cfg.packages[1].price} 
-• الباقة الفاخرة: ${cfg.packages[2].price}
-للحصول على عرض دقيق يرجى التواصل معنا عبر واتساب.`;
+                  return `أسعار باقاتنا تبدأ من:\n${cfg.packages.map(p => `• ${p.name}: ${p.price}`).join('\n')}\n\nللحصول على عرض دقيق يرجى التواصل معنا عبر واتساب.`;
               },
-              replies: ['الباقات المتاحة', 'هل توفرون التقسيط؟', 'معلومات الاتصال']
+              replies: cfg.chatbot.quickReplies.prices
           },
           'الوثائق المطلوبة': {
-              text: () => `الوثائق المطلوبة للحصول على تأشيرة العمرة:
-• جواز سفر ساري المفعول لمدة 6 أشهر على الأقل
-• صورتان شخصيتان حديثتان بخلفية بيضاء
-• استمارة طلب تأشيرة العمرة
-• شهادة التطعيم حسب متطلبات الصحة`,
-              replies: ['خطوات الحجز', 'معلومات الاتصال', 'هل يمكنني الإلغاء؟']
+              text: () => `الوثائق المطلوبة للحصول على تأشيرة العمرة:\n• جواز سفر ساري المفعول لمدة 6 أشهر على الأقل\n• صورتان شخصيتان حديثتان بخلفية بيضاء\n• استمارة طلب تأشيرة العمرة\n• شهادة التطعيم حسب متطلبات الصحة`,
+              replies: cfg.chatbot.quickReplies.documents
           },
           'معلومات الاتصال': {
               text: () => {
-                  return `يمكنك التواصل معنا عبر:
-📞 الهاتف: ${cfg.contact.phone}
-📱 واتساب: ${cfg.contact.whatsapp}
-✉️ الإيميل: ${cfg.contact.email}
-📍 العنوان: ${cfg.contact.address}
-${cfg.contact.workingHours}`;
+                  return `يمكنك التواصل معنا عبر:\n📞 الهاتف: ${cfg.contact.phone}\n📱 واتساب: ${cfg.contact.whatsapp}\n✉️ الإيميل: ${cfg.contact.email}\n📍 العنوان: ${cfg.contact.address}\n${cfg.contact.workingHours}`;
               },
-              replies: ['الباقات المتاحة', 'خدماتنا', 'شكرا لك']
+              replies: cfg.chatbot.quickReplies.contact
           },
           'خدماتنا': {
-              text: () => `نقدم خدمات متكاملة تشمل:
-• استخراج تأشيرة العمرة
-• تذاكر الطيران ذهاب وعودة
-• الإقامة في فنادق متنوعة المستويات
-• النقل الداخلي بين المشاعر
-• مرشدين دينيين متخصصين
-• دعم ومساندة طوال الرحلة`,
-              replies: ['الباقات المتاحة', 'خطوات الحجز', 'هل يوجد مرشد ديني؟']
+              text: () => `نقدم خدمات متكاملة تشمل:\n• استخراج تأشيرة العمرة\n• تذاكر الطيران ذهاب وعودة\n• الإقامة في فنادق متنوعة المستويات\n• النقل الداخلي بين المشاعر\n• مرشدين دينيين متخصصين\n• دعم ومساندة طوال الرحلة`,
+              replies: cfg.chatbot.quickReplies.services
           },
           'خطوات الحجز': {
-              text: () => `خطوات سهلة لتأمين عمرتك:
-1. الاتصال بنا أو تعبئة نموذج الحجز
-2. اختيار الباقة المناسبة
-3. تسليم المستندات المطلوبة
-4. استلام التأشيرة خلال 24-48 ساعة
-5. بدء رحلتك الروحية`,
-              replies: ['الباقات المتاحة', 'الوثائق المطلوبة', 'معلومات الاتصال']
+              text: () => `خطوات سهلة لتأمين عمرتك:\n1. الاتصال بنا أو تعبئة نموذج الحجز\n2. اختيار الباقة المناسبة\n3. تسليم المستندات المطلوبة\n4. استلام التأشيرة خلال 24-48 ساعة\n5. بدء رحلتك الروحية`,
+              replies: cfg.chatbot.quickReplies.booking
           },
           'هل يمكنني الإلغاء؟': {
               text: () => `نعم، يمكن تعديل أو إلغاء الحجز حسب الشروط والأحكام الموضحة في عقد الحجز. يرجى التواصل مباشرة مع فريقنا لمزيد من التفاصيل.`,
@@ -1946,10 +2025,7 @@ ${cfg.contact.workingHours}`;
               replies: ['الباقات المتاحة', 'معلومات الاتصال']
           },
           'default': {
-              text: () => {
-                  return `${cfg.chatbot.fallback}
-يرجى اختيار أحد الخيارات التالية للمساعدة:`;
-              },
+              text: () => cfg.chatbot.fallback,
               replies: ['الباقات المتاحة', 'الوثائق المطلوبة', 'معلومات الاتصال', 'خدماتنا']
           }
       };
@@ -2055,7 +2131,6 @@ ${cfg.contact.workingHours}`;
         if (chatbotWin.style.display === 'flex') {
             if (chatbotMessages.children.length === 0) { 
                 const welcomeData = knowledgeBase['initial'];
-                // Execute the function to get the dynamic text
                 addMessage(welcomeData.text(), false, welcomeData.replies); 
             }
         }
@@ -2066,13 +2141,12 @@ ${cfg.contact.workingHours}`;
       });
       // --- CHATBOT LOGIC END ---
       
-      
       // --- REST OF SITE LOGIC ---
 
       // Enhanced Header Auto Hide/Show
       let lastScroll = 0;
       const header = document.getElementById('mainHeader');
-      const scrollThreshold = 10; 
+      const scrollThreshold = 10;
       let ticking = false;
 
       function updateHeaderVisibility() {
@@ -2148,14 +2222,89 @@ ${cfg.contact.workingHours}`;
         });
       });
 
+      // Stats Counter Animation
+      const statNumbers = document.querySelectorAll('.stat-number');
+      
+      function animateStats() {
+        statNumbers.forEach(stat => {
+          const target = parseInt(stat.getAttribute('data-count'));
+          const suffix = stat.textContent.includes('%') ? '%' : '';
+          let count = 0;
+          const duration = 2000;
+          const increment = target / (duration / 16);
+          
+          const updateCount = () => {
+            if (count < target) {
+              count += increment;
+              stat.textContent = Math.floor(count) + suffix;
+              requestAnimationFrame(updateCount);
+            } else {
+              stat.textContent = target + suffix;
+            }
+          };
+          
+          updateCount();
+        });
+      }
+      
+      // Intersection Observer for Stats
+      const statsSection = document.querySelector('.stats');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateStats();
+            observer.unobserve(statsSection);
+          }
+        });
+      }, { threshold: 0.5 });
+      
+      observer.observe(statsSection);
+
+      // Enhanced Button Interactions
+      document.querySelectorAll('.btn, .cta-button').forEach(button => {
+        button.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-4px)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+        });
+      });
+
+      // Smooth Scrolling for Anchor Links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 100,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+
+      // Enhanced Card Hover Effects
+      document.querySelectorAll('.feature-card, .package-card, .testimonial-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-10px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+        });
+      });
+
       // Contact Form Handler
-      const contactForm = document.querySelector('.contact-form form');
+      const contactForm = document.getElementById('contactForm');
       
       if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
           e.preventDefault();
-          
-          const cfg = window.SHARQIA_CONFIG;
           
           const name = document.getElementById('name').value;
           const phone = document.getElementById('phone').value;
@@ -2194,7 +2343,6 @@ ${message}
         if (!btn.closest('form')) { 
           btn.addEventListener('click', function(e) {
             e.preventDefault();
-            const cfg = window.SHARQIA_CONFIG;
             const message = 'مرحباً! أرغب في الاستفسار عن باقات العمرة';
             const whatsappUrl = `https://wa.me/${cfg.contact.whatsapp}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
@@ -2203,21 +2351,18 @@ ${message}
       });
 
       // Fade-in effect on scroll
-      const mapContainer = document.getElementById('map-container');
-
-      const observer = new IntersectionObserver((entries) => {
+      const mapContainerElement = document.getElementById('map-container');
+      const mapObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            mapContainer.classList.add('visible');
-            observer.unobserve(mapContainer);
+            mapContainerElement.classList.add('visible');
+            mapObserver.unobserve(mapContainerElement);
           }
         });
       }, { threshold: 0.3 });
 
-      observer.observe(mapContainer);
+      mapObserver.observe(mapContainerElement);
     });
   </script>
-
-
 </body>
 </html>
